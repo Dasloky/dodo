@@ -109,32 +109,37 @@ elif page == "רגעים קטנים":
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
-    TOTAL_PHOTOS = 14 # תוודאי שזה המספר המדויק
+    TOTAL_PHOTOS = 14  # תוודאי שזה המספר המדויק של התמונות שהעלית
     
-    # מיכל ריק שבו נחליף את התוכן בכל פעם
-    container = st.empty()
+    # יצירת מיכל ריק שמתנקה בכל פעם כדי שלא ייווצרו כפילויות בדף
+    placeholder = st.empty()
     
-    # יצירת רשימה רנדומלית
-    nums = list(range(1, TOTAL_PHOTOS + 1))
-    random.shuffle(nums)
-    
-    # הלולאה שרצה על התמונות
-    for n in nums:
-        # כאן אנחנו בונים את שם הקובץ המדויק
-        img_name = f"PHOTO_{n}.jpg"
+    # רשימה רנדומלית של תמונות
+    if 'photo_order' not in st.session_state:
+        st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
+        random.shuffle(st.session_state.photo_order)
+
+    # לולאת התמונות
+    for num in st.session_state.photo_order:
+        img_path = f"PHOTO_{num}.jpg"
         
-        with container.container():
-            st.markdown(f"""
-            <div class="cute-card">
-                <img src="app/static/{img_name}" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x300?text=Missing+Photo+{n}'">
-                <p>רגע מתוק #{n}</p>
-            </div>
-            """, unsafe_allow_html=True)
-            # אם התמונות לא בתיקיית static, פשוט תשני את ה-src ל: {img_name}
+        with placeholder.container():
+            # יצירת הכרטיסייה הלבנה שרצית, ורק התמונה בתוכה
+            st.markdown(f'<div class="cute-card">', unsafe_allow_html=True)
             
-        time.sleep(4)
+            # ניסיון טעינה של התמונה - אם היא לא קיימת, הוא לא יציג אייקון שבור
+            try:
+                st.image(img_path, caption=f"רגע מתוק #{num}", use_container_width=True)
+            except:
+                st.error(f"לא הצלחתי למצוא את התמונה {img_path}")
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # זמן המתנה בין תמונות
+            time.sleep(4)
     
-    if st.button("סיבוב נוסף?"):
+    if st.button("לראות שוב"):
+        random.shuffle(st.session_state.photo_order)
         st.rerun()
 
 # --- דף 4: הפתעה חסויה ---
