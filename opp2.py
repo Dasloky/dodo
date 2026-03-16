@@ -11,7 +11,6 @@ st.set_page_config(
 # --- הזרקת CSS לטיפול בעברית (RTL) ועיצוב כללי ---
 st.markdown("""
     <style>
-    /* הגדרת פונט ויישור לימין לכל האפליקציה */
     @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap');
     
     html, body, [data-testid="stSidebarNav"], .main {
@@ -20,30 +19,32 @@ st.markdown("""
         font-family: 'Assistant', sans-serif;
     }
     
-    /* יישור כותרות וטקסט מרכזי */
     div[data-testid="stMarkdownContainer"] p, h1, h2, h3, h4, li {
         text-align: right;
     }
 
-    /* תיקון כיוון הניווט בצד */
-    section[data-testid="stSidebar"] > div {
-        direction: rtl;
+    /* תיקון ספציפי לסליידר - מנטרל את ה-RTL על הרכיב עצמו כדי שלא יישבר */
+    div[data-testid="stSelectSlider"] {
+        direction: ltr !important;
+    }
+    
+    /* מחזיר את הכותרת של הסליידר לימין */
+    div[data-testid="stSelectSlider"] label {
+        direction: rtl !important;
+        text-align: right !important;
+        display: block;
     }
 
-    /* עיצוב כפתורים */
+    /* תיקון הטקסט של האופציות מתחת לסליידר */
+    div[data-testid="stWidgetLabel"] {
+        direction: rtl !important;
+    }
+
     .stButton>button {
         width: 100%;
         border-radius: 10px;
         background-color: #ff4b4b;
         color: white;
-        border: none;
-        padding: 10px;
-    }
-    
-    /* תיקון יישור למדדים (Metrics) */
-    [data-testid="stMetricValue"] {
-        text-align: right;
-        direction: ltr; /* מספרים נראים טוב יותר משמאל לימין */
     }
     </style>
     """, unsafe_allow_html=True)
