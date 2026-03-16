@@ -5,9 +5,9 @@ import random
 import pandas as pd
 
 # הגדרות דף
-st.set_page_config(page_title="מערכת עידודו v4.0", page_icon="📊", layout="wide")
+st.set_page_config(page_title="NANA & IDUDU OS", page_icon="📊", layout="wide")
 
-# --- CSS מותאם ל-RTL ועיצוב דשבורד ---
+# --- CSS מלוטש: צבעים מודרניים ו-RTL ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -16,118 +16,159 @@ st.markdown("""
         direction: rtl;
         text-align: right;
         font-family: 'Assistant', sans-serif;
-        background: #f1f5f9;
+        background: #F1F5F9; /* רקע אפור-תכלת בהיר מאוד */
     }
 
-    /* עיצוב כרטיסיות הנתונים */
+    /* עיצוב כרטיסיות המדדים (Metrics) */
     [data-testid="stMetric"] {
         background: white;
-        padding: 15px;
+        padding: 20px;
         border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid #E2E8F0;
     }
-
-    h1, h2, h3 { color: #0284c7 !important; text-align: right; }
     
+    /* עיצוב ה-Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #0F172A;
+        color: white;
+    }
+    [data-testid="stSidebar"] * { color: white !important; }
+
+    /* כותרות */
+    h1, h2, h3 { color: #0EA5E9 !important; font-weight: 700; }
+
+    /* תיקון טקסט כללי */
     .stMarkdown, div[data-testid="stMarkdownContainer"] p {
         text-align: right;
         direction: rtl;
+        color: #1E293B;
     }
-    
-    /* עיצוב הגרפים */
-    .stPlotlyChart {
+
+    /* עיצוב גרפים */
+    .stChart {
         background: white;
+        padding: 15px;
         border-radius: 15px;
-        padding: 10px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- לוגיקה של נתונים ---
+# --- נתונים למערכת ---
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
-# נתונים לגרפים (דמה מצחיק)
-miss_you_data = pd.DataFrame({
-    'יום בשבוע': ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'שבת'],
-    'מדד געגוע': [80, 85, 95, 100, 70, 20, 10] # יורד בסופ"ש כי נפגשים
-})
+# נתונים לגרפים
+miss_you_df = pd.DataFrame({
+    "יום": ["א", "ב", "ג", "ד", "ה", "ו", "ש"],
+    "געגוע": [85, 90, 100, 95, 75, 30, 20]
+}).set_index("יום")
 
-time_split_data = pd.DataFrame({
-    'פעילות': ['שיחות בטלפון', 'מחשבות עליך', 'עבודה/צבא', 'גיימינג/מיינקראפט'],
-    'אחוז מהיום': [25, 40, 25, 10]
-})
+activity_df = pd.DataFrame({
+    "פעילות": ["מיינקראפט", "שיחות", "עבודה", "שינה"],
+    "שעות שבועיות": [15, 30, 45, 50]
+}).set_index("פעילות")
 
 # --- תפריט צד ---
 with st.sidebar:
-    st.title("Mission Control 🚀")
-    page = st.sidebar.selectbox("ניווט במערכת:", 
-        ["דשבורד ראשי", "המספרים שלנו", "קיר זיכרונות", "כספת חסויה 🔒"])
+    st.title("מערכת שליטה 🚀")
+    page = st.selectbox("בחר תצוגה:", ["דשבורד ראשי", "דאטה וסטטיסטיקה", "גלריה חיה", "כספת חסויה 🔒"])
     st.divider()
-    st.write("שלום, **עידודו**")
-    st.write("סטטוס: **מחובר**")
+    st.write(f"משתמש: **עידודו**")
+    st.write(f"גרסה: **4.2.0**")
 
-# --- דף 1: דשבורד ראשי מורחב ---
+# --- דף 1: דשבורד ראשי ---
 if page == "דשבורד ראשי":
-    st.title("מרכז שליטה ובקרה - קשר נאנה & עידודו 📈")
+    st.title("Dashboard: Love Metrics 📈")
     
-    # שורת מדדים עליונה
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("ימים רשמיים", f"{days_together}")
-    col2.metric("שנות היכרות", "8")
-    col3.metric("בדיחות פרטיות", "∞")
-    col4.metric("סטטוס קשר", "יציב מאוד")
-    
-    st.divider()
-    
-    # גרפים אינטראקטיביים
-    col_left, col_right = st.columns(2)
-    
-    with col_left:
-        st.subheader("📊 מדד געגוע שבועי")
-        st.line_chart(miss_you_data.set_index('יום בשבוע'))
-        st.caption("שיא הגעגוע נרשם באמצע השבוע (בזמן היומיות)")
-
-    with col_right:
-        st.subheader("🍕 התפלגות מחשבות יומית")
-        st.bar_chart(time_split_data.set_index('פעילות'))
-        st.caption("נתונים מבוססים על ניתוח בזמן אמת של נאנה")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("ימים כזוג", days_together, "↑ 100%")
+    c2.metric("שנות חברות", "8", "Original")
+    c3.metric("סינכרון מוחי", "99.9%", "Stable")
+    c4.metric("רמת אנרגיה", "Low", "-5% (צריך דייט)")
 
     st.divider()
     
-    # אזור התראות
-    st.subheader("🔔 התראות מערכת אחרונות")
-    st.warning("התראה: רמת הסוכר בדם נמוכה - מומלץ להיפגש לדייט בקרוב.")
-    st.success("דיווח: כל המערכות תקינות. רמת האהבה בשיא של כל הזמנים.")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.subheader("📈 מגמת געגוע (שבועי)")
+        st.area_chart(miss_you_df, color="#0EA5E9")
+    with col_b:
+        st.subheader("📊 חלוקת משאבי זמן")
+        st.bar_chart(activity_df, color="#6366F1")
 
-# --- דף 2: המספרים שלנו ---
-elif page == "המספרים שלנו":
-    st.title("המספרים שמאחורי ה-8 שנים 🔢")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.info("כמות שעות מצטברת במיינקראפט: **יותר מדי**")
-    with c2:
-        st.info("כמות ויכוחים על המזגן: **0 (כי אנחנו מושלמים)**")
+    st.info("💡 **הערת מערכת:** נרשמה חריגה חיובית בכמות החיוכים מאז תחילת הקשר.")
 
-# --- דף 3: קיר זיכרונות ---
-elif page == "קיר זיכרונות":
-    st.title("ארכיון ויזואלי 📸")
-    cols = st.columns(3)
-    for i in range(3):
-        with cols[i]:
-            st.image("PHOTO.jpg", use_container_width=True, caption=f"זיכרון מתחלף {i+1}")
-            time.sleep(0.1) # מניעת קפיצות
+# --- דף 2: דאטה וסטטיסטיקה (הדף השני המורחב) ---
+elif page == "דאטה וסטטיסטיקה":
+    st.title("עמוק לתוך הנתונים 💾")
+    st.write("ניתוח כמותי של 8 שנות היכרות:")
+    
+    # כרטיסיות נתונים מפורטות
+    row1_c1, row1_c2 = st.columns(2)
+    with row1_c1:
+        st.subheader("🏠 נתונים לוגיסטיים")
+        st.write("- **נסיעות בקו בסיס-בית:** ~520 (מבוסס על יומיות)")
+        st.write("- **טוסטים שנאכלו יחד:** 142")
+        st.write("- **שעות מצטברות בשיחות וידאו:** 1,200+")
+        
+    with row1_c2:
+        st.subheader("🎮 גיימינג ומיינקראפט")
+        st.write("- **בלוקים שנחצבו:** 1,000,000+")
+        st.write("- **פעמים שעידודו הציל את נאנה:** ∞")
+        st.write("- **בתים שנבנו ונהרסו:** 12")
 
-# --- דף 4: כספת חסויה (עם חידה) ---
+    st.divider()
+    st.subheader("📅 ציר זמן של אירועים קריטיים")
+    st.table(pd.DataFrame({
+        "אירוע": ["היכרות חטיבה", "מעבר למגמה", "מסיבת הגיוס", "החלטה רשמית"],
+        "סטטוס": ["חברים", "חברים טובים", "וידוי", "אהבה"],
+        "שנה": ["2018", "2020", "2025", "2026"]
+    }))
+
+# --- דף 3: גלריה חיה ---
+elif page == "גלריה חיה":
+    st.title("Visual Archive 📸")
+    placeholder = st.empty()
+    
+    # גלריה של 3 תמונות בו זמנית
+    for _ in range(5):
+        c1, c2, c3 = st.columns(3)
+        nums = random.sample(range(1, 15), 3)
+        c1.image("PHOTO.jpg", caption=f"קובץ #{nums[0]}", use_container_width=True)
+        c2.image("PHOTO.jpg", caption=f"קובץ #{nums[1]}", use_container_width=True)
+        c3.image("PHOTO.jpg", caption=f"קובץ #{nums[2]}", use_container_width=True)
+        time.sleep(4)
+
+# --- דף 4: כספת חסויה (החידה החדשה) ---
 elif page == "כספת חסויה 🔒":
-    st.title("כניסה למורשים בלבד 🔒")
-    password = st.text_input("הזן קוד גישה (תאריך הווידוי DD.MM):")
+    st.title("כניסה לאזור מוצפן 🔒")
     
-    if password == "12.12":
+    st.subheader("חידת פתיחה (Security Challenge):")
+    st.write("""
+    כדי לקבל גישה למכתב, עליך לפתור את המשוואה הבאה:
+    **כמות השנים שאנחנו מכירים** כפול **היום בחודש שבו הכל השתנה (הווידוי)**.
+    """)
+    
+    # רמז: 8 שנים * 12 (היום של ה-12.12) = 96
+    user_input = st.number_input("הכנס את התוצאה המספרית:", step=1, value=0)
+    
+    if user_input == 96:
+        st.success("✅ אימות הצליח. פותחת קבצים חסויים...")
         st.balloons()
-        st.write("### אישור גישה התקבל!")
-        st.error("🚨 תזכורת: תמונות טקטי ללא התראה הן עבירה על החוק!")
-        st.info("כאן המכתב הארוך שלך...")
-    elif password != "":
-        st.error("גישה נדחתה. הקוד שגוי.")
+        
+        # ה-Easter Egg
+        st.error("🚨 **התראה:** זוהתה חריגה בנהלי 'לבוש טקטי'. נאנה דורשת סגירת ריצ'רץ' מיידית!")
+        
+        st.divider()
+        st.subheader("מכתב מנאנה ❤️")
+        st.info("""
+        עידודו שלי,
+        אין גרף בעולם שיכול לתאר כמה אני אוהבת אותך. 
+        אחרי 8 שנים, כל נתון רק מוכיח שאתה הבחירה הכי טובה שעשיתי.
+        [כאן תדביקי את המכתב שלך]
+        """)
+        st.snow()
+    elif user_input != 0:
+        st.error("❌ טעות בחישוב. נסה שוב, דאטה-בוי.")
