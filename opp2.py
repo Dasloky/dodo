@@ -48,6 +48,14 @@ html, body, .main {
     margin: 0;
 }
 
+.gallery-img {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    object-fit: cover;
+    max-height: 400px;
+}
+
 @media (max-width: 768px) {
     [data-testid="column"] {
         width: 100% !important;
@@ -60,10 +68,6 @@ html, body, .main {
 }
 
 div[data-testid="stSelectbox"] label {
-    color: var(--warm-text) !important;
-}
-
-[data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
     color: var(--warm-text) !important;
 }
 </style>
@@ -86,7 +90,6 @@ st.divider()
 if page == "קודם כל":
     st.title("הפינה שלנו ❤️")
     
-    # התיקון כאן: הגדרת 3 עמודות שונות
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f'<div class="cute-card"><h3>{days_together}</h3><p>ימים שאנחנו ביחד</p></div>', unsafe_allow_html=True)
@@ -114,15 +117,30 @@ elif page == "רגעים קטנים":
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
+    # הגדרת כמות התמונות שיש לך ב-Git
+    TOTAL_PHOTOS = 14  # תשני למספר המדויק שיש לך
+    
     photo_placeholder = st.empty()
-    for _ in range(5):
-        num = random.randint(1, 14)
-        photo_placeholder.image("PHOTO.jpg", 
-                               caption=f"רגע מתוק #{num}", 
-                               use_container_width=True)
-        time.sleep(4)
+    
+    # יצירת סדר רנדומלי בכל פעם שנכנסים לדף
+    if 'photo_order' not in st.session_state:
+        st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
+        random.shuffle(st.session_state.photo_order)
+
+    for num in st.session_state.photo_order:
+        image_filename = f"PHOTO_{num}.jpg"
+        
+        with photo_placeholder.container():
+            st.markdown(f"""
+            <div class="cute-card">
+                <img src="{image_filename}" class="gallery-img">
+                <p>רגע מתוק #{num}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            time.sleep(4)
     
     if st.button("לעוד תמונות"):
+        random.shuffle(st.session_state.photo_order)
         st.rerun()
 
 # --- דף 4: הפתעה חסויה ---
