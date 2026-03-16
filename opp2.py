@@ -3,7 +3,7 @@ from datetime import date
 import time
 import random
 
-# הגדרת layout ל-wide תמיד עוזרת לשליטה ב-CSS
+# הגדרות דף
 st.set_page_config(page_title="מערכת עידודו ❤️", page_icon="🔒", layout="wide")
 
 st.markdown("""
@@ -24,15 +24,15 @@ html, body, .main {
     background-color: var(--bg);
 }
 
-/* התאמת ריווח כללי לנייד */
+/* תיקון מרחקים למובייל */
 .block-container {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 5rem !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
 }
 
-/* עיצוב כרטיסיות (Stats) */
+/* עיצוב כרטיסיות */
 .stat-card {
     background: white;
     padding: 20px;
@@ -40,7 +40,7 @@ html, body, .main {
     border-bottom: 4px solid var(--primary);
     text-align: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    margin-bottom: 15px; /* מרווח בין כרטיסים במובייל */
+    margin-bottom: 15px;
 }
 
 .stat-card h3 {
@@ -49,36 +49,27 @@ html, body, .main {
     color: var(--primary);
 }
 
-.stat-card p {
-    margin: 5px 0 0 0;
-    font-size: 16px;
-    color: #475569;
-}
-
-/* התאמות ספציפיות למסכים קטנים (Media Queries) */
+/* התאמות מובייל קריטיות */
 @media (max-width: 768px) {
-    h1 {
-        font-size: 1.8rem !important;
-    }
-    
-    /* הפיכת עמודות לרשימה אנכית במובייל */
+    /* הפיכת עמודות לרשימה אנכית */
     [data-testid="column"] {
         width: 100% !important;
         flex: 1 1 100% !important;
     }
     
-    .stat-card h3 {
-        font-size: 24px;
+    /* הבלטת הניווט בראש הדף */
+    div[data-testid="stSelectbox"] {
+        margin-bottom: 20px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 }
 
-/* עיצוב ה-Metric של Streamlit שייראה טוב יותר */
-[data-testid="stMetric"] {
-    background: white;
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
+/* הסתרת כפתור התפריט המובנה של Streamlit בטלפון כדי שלא יפריע */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
 
 </style>
 """, unsafe_allow_html=True)
@@ -86,33 +77,35 @@ html, body, .main {
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
-# תפריט צד (Sidebar)
-with st.sidebar:
-    st.title("מערכת עידודו v3.0")
-    page = st.selectbox(
-        "לאן תרצה לגשת?",
-        ["לוח הבקרה","המספרים שלנו","קיר זיכרונות חי","כספת חסויה 🔒"]
-    )
-    st.divider()
-    st.write("נוצר על ידי נאנה ❤️")
+# --- ניווט חכם ---
+# בגלל שהסרגל הצידי בעייתי במובייל, נשים את הניווט בראש הדף כתיבת בחירה
+st.write("### 🧭 ניווט במערכת")
+page = st.selectbox(
+    "בחר לאן תרצה לגשת:",
+    ["לוח הבקרה", "המספרים שלנו", "קיר זיכרונות חי", "כספת חסויה 🔒"],
+    label_visibility="collapsed" # מחביא את הכותרת הסטנדרטית בשביל מראה נקי
+)
+st.divider()
+
+# --- תוכן הדפים ---
 
 # דף 1: לוח הבקרה
 if page == "לוח הבקרה":
     st.title("מצב המערכת 📊")
     
+    # שימוש ב-columns (שבמובייל יהיו אחד מתחת לשני)
     col1, col2 = st.columns(2)
-    col1.metric("זמן כזוג", f"{days_together} ימים")
-    col2.metric("ותק קשר", "8 שנים")
+    with col1:
+        st.metric("זמן כזוג", f"{days_together} ימים")
+    with col2:
+        st.metric("ותק קשר", "8 שנים")
     
-    st.divider()
     st.info("עידודו, המערכת מדווחת על רמות גבוהות של געגוע. מומלץ לשלוח הודעה לנאנה.")
 
 # דף 2: המספרים שלנו
 elif page == "המספרים שלנו":
     st.title("8 שנים במספרים 🔢")
-    st.write("ניתוח דאטה של מה שחשוב:")
-
-    # בטלפון העמודות הללו יופיעו אחת מתחת לשנייה בזכות ה-CSS
+    
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown('<div class="stat-card"><h3>∞</h3><p>הודעות "בוקר טוב"</p></div>', unsafe_allow_html=True)
@@ -129,19 +122,14 @@ elif page == "המספרים שלנו":
 # דף 3: קיר זיכרונות
 elif page == "קיר זיכרונות חי":
     st.title("הזיכרונות שלנו 📸")
-    st.write("התמונות מתחלפות אוטומטית...")
+    st.write("מתעדכן אוטומטית...")
 
-    # במובייל, כדי שלא יהיה עמוס מדי, נציג אותן אחת אחרי השנייה
-    col1, col2, col3 = st.columns(3)
-    p1 = col1.empty()
-    p2 = col2.empty()
-    p3 = col3.empty()
+    # במובייל, עדיף להציג תמונה אחת גדולה וברורה בכל פעם
+    p = st.empty()
 
     for _ in range(5):
-        nums = random.sample(range(1, 15), 3)
-        p1.image("PHOTO.jpg", caption=f"רגע {nums[0]}", use_container_width=True)
-        p2.image("PHOTO.jpg", caption=f"רגע {nums[1]}", use_container_width=True)
-        p3.image("PHOTO.jpg", caption=f"רגע {nums[2]}", use_container_width=True)
+        num = random.randint(1, 14)
+        p.image("PHOTO.jpg", caption=f"זיכרון {num} מתוך 14", use_container_width=True)
         time.sleep(4)
 
 # דף 4: כספת
@@ -157,8 +145,7 @@ elif page == "כספת חסויה 🔒":
         st.balloons()
         st.warning("⚠️ חריגה בנהלי לבוש טקטי!")
         st.divider()
-        st.subheader("המכתב שלי:")
-        st.info("עידודו שלי,\n\nאין מספר שיכול לתאר מה אתה בשבילי. אוהבת אותך, נאנה ❤️")
+        st.info("עידודו שלי, אין מספר שיכול לתאר מה אתה בשבילי. אוהבת אותך, נאנה ❤️")
         st.snow()
     elif user_answer != "":
-        st.error("קוד שגוי. נסה שוב...")
+        st.error("קוד שגוי.")
