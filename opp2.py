@@ -109,7 +109,7 @@ elif page == "רגעים קטנים":
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
-    TOTAL_PHOTOS = 14  
+    TOTAL_PHOTOS = 23  
     
     placeholder = st.empty()
     
@@ -121,8 +121,6 @@ elif page == "קיר זיכרונות":
         img_path = f"Image_{num}.jpg"
         
         with placeholder.container():
-            # פתיחת הדיב של הכרטיס
-            st.markdown('<div class="cute-card">', unsafe_allow_html=True)
             
             # הצגת התמונה - היא תיכנס אוטומטית לתוך הדיב שמעליה
             try:
