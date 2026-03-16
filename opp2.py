@@ -10,7 +10,7 @@ if st.session_state.stage == 0:
 
     st.title("יש לי הפתעה בשבילך 🎁")
 
-    st.image("images/us1.jpg")
+    st.image("photo.jpg")
 
     if st.button("תתחיל"):
         st.session_state.stage = 1
@@ -20,7 +20,7 @@ elif st.session_state.stage == 1:
 
     st.header("כמה רגעים שאני אוהבת ❤️")
 
-    st.image("images/us2.jpg", caption="הדייט הראשון שלנו")
+    st.image("photo.jpg", caption="הדייט הראשון שלנו")
 
     if st.button("המשך"):
         st.session_state.stage = 2
@@ -58,4 +58,4 @@ elif st.session_state.stage == 3:
     אני אוהבת אותך ❤️
     """)
 
-    st.image("images/us3.jpg")
+    st.image("photo.jpg")
