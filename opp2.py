@@ -4,148 +4,144 @@ import time
 import random
 
 # הגדרות דף
-st.set_page_config(page_title="מערכת עידודו ❤️", page_icon="🔒", layout="wide")
+st.set_page_config(page_title="עבור עידודו ❤️", page_icon="❤️", layout="wide")
 
+# --- CSS חמוד ונעים מותאם לטלפון ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
 
-/* הגדרות בסיס */
 :root {
-    --bg: #f8fafc;
-    --primary: #0284c7;
-    --text: #0f172a;
+    --primary-pink: #ffafcc;
+    --soft-blue: #a2d2ff;
+    --bg-color: #fff5f8;
 }
 
 html, body, .main {
     direction: rtl;
     text-align: right;
     font-family: 'Assistant', sans-serif;
-    background-color: var(--bg);
+    background-color: var(--bg-color);
 }
 
-/* תיקון מרחקים למובייל */
-.block-container {
-    padding-top: 1rem !important;
-    padding-bottom: 5rem !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-}
-
-/* עיצוב כרטיסיות */
-.stat-card {
+/* כרטיסיות חמודות */
+.cute-card {
     background: white;
     padding: 20px;
-    border-radius: 18px;
-    border-bottom: 4px solid var(--primary);
+    border-radius: 25px;
+    border: 2px solid var(--primary-pink);
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(255, 175, 204, 0.2);
     margin-bottom: 15px;
 }
 
-.stat-card h3 {
-    margin: 0;
-    font-size: 28px;
-    color: var(--primary);
+.cute-card h3 {
+    color: #ff8fab;
+    margin-bottom: 5px;
 }
 
-/* התאמות מובייל קריטיות */
+/* התאמה למובייל */
 @media (max-width: 768px) {
-    /* הפיכת עמודות לרשימה אנכית */
     [data-testid="column"] {
         width: 100% !important;
         flex: 1 1 100% !important;
     }
-    
-    /* הבלטת הניווט בראש הדף */
-    div[data-testid="stSelectbox"] {
-        margin-bottom: 20px;
-        background-color: white;
-        border-radius: 10px;
-        padding: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    .block-container {
+        padding: 1rem !important;
     }
 }
 
-/* הסתרת כפתור התפריט המובנה של Streamlit בטלפון כדי שלא יפריע */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-
+/* עיצוב כפתורים */
+.stButton>button {
+    border-radius: 20px;
+    background-color: var(--primary-pink);
+    color: white;
+    border: none;
+}
 </style>
 """, unsafe_allow_html=True)
 
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
-# --- ניווט חכם ---
-# בגלל שהסרגל הצידי בעייתי במובייל, נשים את הניווט בראש הדף כתיבת בחירה
-st.write("### 🧭 ניווט במערכת")
+# --- ניווט עליון חמוד ---
+st.write("## היי עידודו 👋")
 page = st.selectbox(
-    "בחר לאן תרצה לגשת:",
-    ["לוח הבקרה", "המספרים שלנו", "קיר זיכרונות חי", "כספת חסויה 🔒"],
-    label_visibility="collapsed" # מחביא את הכותרת הסטנדרטית בשביל מראה נקי
+    "לאן נלך היום?",
+    ["הבית שלנו", "רגעים קטנים", "קיר זיכרונות", "הפתעה חסויה 🔒"],
+    label_visibility="collapsed"
 )
 st.divider()
 
-# --- תוכן הדפים ---
-
-# דף 1: לוח הבקרה
-if page == "לוח הבקרה":
-    st.title("מצב המערכת 📊")
+# --- דף 1: הבית שלנו ---
+if page == "הבית שלנו":
+    st.title("הבית של נאנה ועידודו ❤️")
     
-    # שימוש ב-columns (שבמובייל יהיו אחד מתחת לשני)
     col1, col2 = st.columns(2)
     with col1:
-        st.metric("זמן כזוג", f"{days_together} ימים")
+        st.markdown(f'<div class="cute-card"><h3>{days_together}</h3><p>ימים של ביחד</p></div>', unsafe_allow_html=True)
     with col2:
-        st.metric("ותק קשר", "8 שנים")
+        st.markdown('<div class="cute-card"><h3>8</h3><p>שנים של חברות</p></div>', unsafe_allow_html=True)
     
-    st.info("עידודו, המערכת מדווחת על רמות גבוהות של געגוע. מומלץ לשלוח הודעה לנאנה.")
+    st.info("סתם רציתי להגיד שאני מתגעגעת אליך ברגע זה ממש.")
 
-# דף 2: המספרים שלנו
-elif page == "המספרים שלנו":
-    st.title("8 שנים במספרים 🔢")
+# --- דף 2: רגעים קטנים (המספרים בגרסה חמודה) ---
+elif page == "רגעים קטנים":
+    st.title("כל מיני דברים עלינו ✨")
     
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown('<div class="stat-card"><h3>∞</h3><p>הודעות "בוקר טוב"</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="cute-card"><h3>∞</h3><p>נשיקות וחיבוקים</p></div>', unsafe_allow_html=True)
     with c2:
-        st.markdown('<div class="stat-card"><h3>2,920</h3><p>ימים של חברות</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="cute-card"><h3>2,920</h3><p>לילות שבהם נרדמנו במחשבה אחד על השני</p></div>', unsafe_allow_html=True)
     with c3:
-        st.markdown('<div class="stat-card"><h3>1</h3><p>וידוי ב-12.12</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="cute-card"><h3>1</h3><p>לב אחד ענקי</p></div>', unsafe_allow_html=True)
+    
+    st.divider()
+    st.write("זוכר שפעם חשבנו שנהיה רק חברים? מזל שזה עבר לנו...")
 
-    st.markdown(
-        '<div class="stat-card" style="border-bottom-color: #f472b6;"><h3>99,999+</h3><p>בדיחות פרטיות</p></div>',
-        unsafe_allow_html=True
-    )
-
-# דף 3: קיר זיכרונות
-elif page == "קיר זיכרונות חי":
+# --- דף 3: קיר זיכרונות (הגלריה שביקשת לא לגעת בה) ---
+elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
-    st.write("מתעדכן אוטומטית...")
-
-    # במובייל, עדיף להציג תמונה אחת גדולה וברורה בכל פעם
-    p = st.empty()
+    st.write("התמונות מתחלפות כאן לבד...")
+    
+    col1, col2, col3 = st.columns(3)
+    p1 = col1.empty()
+    p2 = col2.empty()
+    p3 = col3.empty()
 
     for _ in range(5):
-        num = random.randint(1, 14)
-        p.image("PHOTO.jpg", caption=f"זיכרון {num} מתוך 14", use_container_width=True)
+        nums = random.sample(range(1, 15), 3)
+        p1.image("PHOTO.jpg", caption=f"רגע מתוק {nums[0]}", use_container_width=True)
+        p2.image("PHOTO.jpg", caption=f"רגע מתוק {nums[1]}", use_container_width=True)
+        p3.image("PHOTO.jpg", caption=f"רגע מתוק {nums[2]}", use_container_width=True)
         time.sleep(4)
 
-# דף 4: כספת
-elif page == "כספת חסויה 🔒":
-    st.title("הכספת 🔒")
-    st.subheader("חידת אימות:")
-    st.write("באיזה תאריך הכל השתנה במסיבת הגיוס?")
+# --- דף 4: הפתעה חסויה (הפאזל החדש) ---
+elif page == "הפתעה חסויה 🔒":
+    st.title("אזור סודי 🔒")
+    st.write("כדי לקרוא את המכתב, סדר את שלבי הסיפור שלנו מההתחלה לסוף:")
 
-    user_answer = st.text_input("הכנס תאריך", placeholder="DD.MM")
+    # הפאזל: בחירת סדר אירועים
+    step1 = st.selectbox("מה היה השלב הראשון?", ["", "מסיבת גיוס ווידוי", "חברים טובים במגמה", "היכרות בחטיבה"])
+    step2 = st.selectbox("מה היה השלב השני?", ["", "מסיבת גיוס ווידוי", "חברים טובים במגמה", "היכרות בחטיבה"])
+    step3 = st.selectbox("ומה קרה בסוף?", ["", "מסיבת גיוס ווידוי", "חברים טובים במגמה", "היכרות בחטיבה"])
 
-    if user_answer == "12.12":
-        st.success("הקוד התקבל.")
+    if step1 == "היכרות בחטיבה" and step2 == "חברים טובים במגמה" and step3 == "מסיבת גיוס ווידוי":
+        st.success("כל הכבוד! הסיפור שלנו מושלם בדיוק ככה.")
         st.balloons()
-        st.warning("⚠️ חריגה בנהלי לבוש טקטי!")
+        
         st.divider()
-        st.info("עידודו שלי, אין מספר שיכול לתאר מה אתה בשבילי. אוהבת אותך, נאנה ❤️")
+        st.subheader("המכתב שלי אליך ❤️")
+        st.write("""
+        עידודו שלי,
+        
+        אחרי 8 שנים של חברות, אני כל כך שמחה שהיום אני יכולה לקרוא לך שלי.
+        תודה על כל רגע, על המיינקראפט, על השיחות בטלפון ועל מי שאתה.
+        
+        אני אוהבת אותך המון,
+        נאנה
+        """)
         st.snow()
-    elif user_answer != "":
-        st.error("קוד שגוי.")
+    elif step1 != "" and step2 != "" and step3 != "":
+        st.error("אופס, זה לא הסדר הנכון... תנסה שוב!")
