@@ -1,119 +1,143 @@
 import streamlit as st
-import pandas as pd
 from datetime import date
 
-# הגדרות דף
-st.set_page_config(page_title="מזל טוב!", page_icon="🎁", layout="wide")
+# הגדרות דף - חייב להיות הדבר הראשון בקוד
+st.set_page_config(
+    page_title="מזל טוב!",
+    page_icon="🎁",
+    layout="centered"
+)
 
-# --- הזרקת CSS לטיפול בעברית (RTL) ---
+# --- הזרקת CSS לטיפול בעברית (RTL) ועיצוב כללי ---
 st.markdown("""
     <style>
-    .main {
+    /* הגדרת פונט ויישור לימין לכל האפליקציה */
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap');
+    
+    html, body, [data-testid="stSidebarNav"], .main {
         direction: rtl;
         text-align: right;
+        font-family: 'Assistant', sans-serif;
     }
-    div[data-testid="stSidebarNav"] {
+    
+    /* יישור כותרות וטקסט מרכזי */
+    div[data-testid="stMarkdownContainer"] p, h1, h2, h3, h4, li {
+        text-align: right;
+    }
+
+    /* תיקון כיוון הניווט בצד */
+    section[data-testid="stSidebar"] > div {
         direction: rtl;
-        text-align: right;
     }
-    div[data-testid="stMarkdownContainer"] p {
-        text-align: right;
-    }
-    /* יישור כפתורים לימין */
+
+    /* עיצוב כפתורים */
     .stButton>button {
-        float: right;
+        width: 100%;
+        border-radius: 10px;
+        background-color: #ff4b4b;
+        color: white;
+        border: none;
+        padding: 10px;
+    }
+    
+    /* תיקון יישור למדדים (Metrics) */
+    [data-testid="stMetricValue"] {
+        text-align: right;
+        direction: ltr; /* מספרים נראים טוב יותר משמאל לימין */
     }
     </style>
-    """, unsafe_allow_index=True)
+    """, unsafe_allow_html=True)
 
 # --- פונקציות עזר ---
-def calculate_days_together(start_date):
+def calculate_days(start_date):
     today = date.today()
     delta = today - start_date
     return delta.days
 
-# תאריך תחילת הקשר (שני את זה לתאריך שלכם)
-anniversary = date(2022, 5, 15) 
+# הגדרת תאריך תחילת הקשר (שני לתאריך שלכם)
+ANNIVERSARY = date(2022, 5, 15) 
 
-# --- כותרת ראשית ---
-st.title("🎂 יום הולדת שמח, אהוב שלי!")
-st.balloons()
+# --- תפריט צד (Sidebar) ---
+st.sidebar.title("הניווט שלנו 🧭")
+page = st.sidebar.radio("עברי בין הדפים:", 
+    ["הבית שלנו", "ציר זמן של אהבה", "גלריית רגעים", "בוחן פתע", "הקדשה אישית"])
 
-# --- תפריט צד ---
-st.sidebar.title("הניווט שלנו")
-page = st.sidebar.radio("בחר לאן לעבור:", 
-    ["הבית שלנו", "סיפור האהבה שלנו (Timeline)", "גלריית רגעים", "כמה אתה מכיר אותי?", "הקדשה מהלב"])
-
+# --- דף 1: דף הבית ---
 if page == "הבית שלנו":
-    st.header("ברוך הבא לממלכה הקטנה שלנו")
+    st.balloons()
+    st.title("מזל טוב, אהוב שלי! 🎂")
+    st.write("ברוך הבא למקום הקטן שבניתי בשבילך, כדי לחגוג את מי שאתה ואת מה שאנחנו.")
     
-    # מדד האושר האינטראקטיבי
-    st.subheader("מדד האהבה היומי")
-    love_level = st.slider("כמה אני אוהבת אותך היום?", 0, 100, 100)
-    if love_level > 90:
-        st.success(f"נכון! {love_level}% זה המינימום!")
-    
-    # סטטיסטיקה של הקשר
-    days = calculate_days_together(anniversary)
-    col1, col2, col3 = st.columns(3)
-    col1.metric("ימים יחד", f"{days}")
-    col2.metric("חוויות משותפות", "אינסוף")
-    col3.metric("חיוכים שגרמת לי", "מיליון +")
+    # הצגת נתונים מספריים
+    days_together = calculate_days(ANNIVERSARY)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(label="ימים שאנחנו יחד", value=f"{days_together}")
+    with col2:
+        st.metric(label="חוויות שצברנו", value="∞")
 
-elif page == "סיפור האהבה שלנו (Timeline)":
-    st.header("הדרך שעברנו יחד")
-    
-    # יצירת ציר זמן בעזרת מכולות (Containers)
-    with st.container():
-        st.subheader("📍 הפעם הראשונה שנפגשנו")
-        st.write("זוכר את המדים, את המבוכה הקלה ואת החיוך הראשון?")
-        st.divider()
-        
-        st.subheader("📍 הטיול הגדול הראשון")
-        st.write("כשגילינו שגם כשמאבדים את הדרך, הכי כיף ללכת לאיבוד ביחד.")
-        st.divider()
-        
-        st.subheader("📍 הרגע שידעתי...")
-        st.write("זה היה ערב רגיל לגמרי, אבל פתאום הכל הרגיש נכון.")
+    st.divider()
+    st.subheader("מדד האהבה היום:")
+    love_score = st.select_slider("כמה אני אוהבת אותך?", options=["המון", "ממש המון", "הכי בעולם", "יותר ממה שאפשר לתאר"])
+    st.write(f"התשובה היא: **{love_score}** (ולא הייתה אופציה אחרת...)")
 
+# --- דף 2: ציר זמן ---
+elif page == "ציר זמן של אהבה":
+    st.header("הדרך שעברנו יחד 🗺️")
+    st.write("כל נקודה היא זיכרון שלא הייתי מחליפה בעד שום הון שבעולם:")
+    
+    st.info("**2023:** הדייט הראשון שלנו. המבוכה, החיוכים וההבנה שיש כאן משהו מיוחד.")
+    st.info("**2024:** הטיול ההוא שבו צחקנו עד שכאבה הבטן.")
+    st.info("**2025:** רגעים קטנים של יומיום שהפכו לזיכרונות גדולים.")
+    st.success("ואנחנו רק בהתחלה...")
+
+# --- דף 3: גלריית תמונות ---
 elif page == "גלריית רגעים":
-    st.header("התמונות שעושות לי חיוך")
+    st.header("תמונות וזיכרונות 📸")
+    st.write("כאן תמצאי כמה מהרגעים האהובים עליי:")
     
-    # שימוש בטאבים לתצוגה נוחה
-    tab1, tab2, tab3 = st.tabs(["דייטים", "טיולים", "סתם ככה"])
+    # שימוש בטאבים לחלוקת התמונות
+    tab1, tab2 = st.tabs(["רגעים מצחיקים", "רגעים מרגשים"])
     
     with tab1:
-        st.write("כאן תשימי תמונות מדייטים")
-        # st.image("images/date1.jpg", caption="הערב ההוא במסעדה", width=400)
+        # st.image("images/funny1.jpg", caption="זוכר מה קרה כאן?")
+        st.write("[כאן תעלי תמונה מהתיקייה images שב-GitHub]")
     with tab2:
-        st.write("כאן תשימי תמונות מטיולים")
-        # st.image("images/trip.jpg", use_column_width=True)
-    with tab3:
-        st.write("הרגעים הקטנים של היום-יום")
+        # st.image("images/sweet1.jpg", caption="אחד הרגעים האהובים עליי")
+        st.write("[כאן תעלי תמונה מהתיקייה images שב-GitHub]")
 
-elif page == "כמה אתה מכיר אותי?":
-    st.header("שאלון האוהבים הגדול")
+# --- דף 4: בוחן פתע ---
+elif page == "בוחן פתע":
+    st.header("כמה אתה מכיר אותנו? 🤔")
     
-    q1 = st.selectbox("מה היה האוכל הראשון שבישלנו יחד?", ["פסטה שרופה", "פיצה", "סלט מושקע", "חביתה"])
-    if q1 == "פסטה שרופה": # דוגמה
-        st.write("✅ בול! וזה עדיין היה טעים.")
-    
-    q2 = st.text_input("מה המילה שאני הכי אוהבת שאתה אומר?")
-    if st.button("בדוק"):
-        if "אוהב" in q2:
-            st.write("❤️ צדקת, אין על המילה הזו.")
+    score = 0
+    q1 = st.radio("מה הדבר שאני הכי אוהבת לעשות איתך?", ["לראות סרט", "סתם לדבר", "לשחק Minecraft", "לטייל"])
+    if q1 == "סתם לדבר": # עדכני לתשובה הנכונה
+        score += 1
+        
+    q2 = st.selectbox("איזה צבע אני הכי אוהבת עליך?", ["כחול", "שחור", "המדים שלך", "לבן"])
+    if q2 == "המדים שלך": # עדכני לתשובה הנכונה
+        score += 1
+        
+    if st.button("סיום הבוחן"):
+        if score == 2:
+            st.snow()
+            st.success("אלוף! אתה מכיר אותי בול.")
         else:
-            st.write("הממ... קרוב, אבל תנסה שוב.")
+            st.warning(f"קיבלת {score}/2. לא נורא, יש לנו את כל החיים להכיר!")
 
-elif page == "הקדשה מהלב":
-    st.header("הקדשה אישית")
+# --- דף 5: הקדשה ---
+elif page == "הקדשה אישית":
+    st.header("משהו קטן מהלב 💌")
     st.write("""
-    כאן את יכולה לכתוב לו את כל המילים הכי יפות שיש. 
-    כמה את גאה בו, כמה את שמחה שהוא לצידך, ואיך את מחכה לכל מה שיבוא.
+    כאן את כותבת את כל מה שאת מרגישה...
+    
+    על כמה הוא משמעותי עבורך, על הביטחון שהוא נותן לך, 
+    ועל זה שאת גאה בו (במיוחד עם כל העבודה הקשה בבסיס).
+    
+    מאחלת לנו עוד שנים של צחוק, למידה משותפת וים של אהבה.
     """)
     
-    # כפתור שמפעיל אפקט "שלג" בסוף
-    if st.button("לחץ כאן להפתעה אחרונה"):
+    if st.button("לחץ להפתעה אחרונה"):
         st.snow()
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") # סתם שיר לדוגמה
-        st.write("יום הולדת שמח, אהבת חיי!")
+        st.write("❤️ אוהבת אותך הכי בעולם! ❤️")
