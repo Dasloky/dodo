@@ -109,36 +109,34 @@ elif page == "רגעים קטנים":
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
-    TOTAL_PHOTOS = 23  # תוודאי שזה המספר המדויק של התמונות שהעלית
+    TOTAL_PHOTOS = 14  
     
-    # יצירת מיכל ריק שמתנקה בכל פעם כדי שלא ייווצרו כפילויות בדף
     placeholder = st.empty()
     
-    # רשימה רנדומלית של תמונות
     if 'photo_order' not in st.session_state:
         st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
         random.shuffle(st.session_state.photo_order)
 
-    # לולאת התמונות
     for num in st.session_state.photo_order:
         img_path = f"Image_{num}.jpg"
         
         with placeholder.container():
-            # יצירת הכרטיסייה הלבנה שרצית, ורק התמונה בתוכה
-            st.markdown(f'<div class="cute-card">', unsafe_allow_html=True)
+            # פתיחת הדיב של הכרטיס
+            st.markdown('<div class="cute-card">', unsafe_allow_html=True)
             
-            # ניסיון טעינה של התמונה - אם היא לא קיימת, הוא לא יציג אייקון שבור
+            # הצגת התמונה - היא תיכנס אוטומטית לתוך הדיב שמעליה
             try:
-                st.image(img_path, caption=f"רגע מתוק #{num}", use_container_width=True)
+                st.image(img_path, use_container_width=True)
+                st.markdown(f"<p style='margin-top:10px;'>רגע מתוק #{num}</p>", unsafe_allow_html=True)
             except:
-                st.error(f"לא הצלחתי למצוא את התמונה {img_path}")
+                st.write(f"מחכה לתמונה הבאה... ({num})")
             
+            # סגירת הדיב
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # זמן המתנה בין תמונות
             time.sleep(4)
     
-    if st.button("לראות שוב"):
+    if st.button("סיבוב נוסף?"):
         random.shuffle(st.session_state.photo_order)
         st.rerun()
 
