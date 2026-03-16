@@ -1,14 +1,10 @@
 import streamlit as st
 from datetime import date
 
-# הגדרות דף - חייב להיות הדבר הראשון בקוד
-st.set_page_config(
-    page_title="מזל טוב!",
-    page_icon="🎁",
-    layout="centered"
-)
+# הגדרות דף
+st.set_page_config(page_title="עבור עידודו ❤️", page_icon="💙", layout="centered")
 
-# --- הזרקת CSS לטיפול בעברית (RTL) ועיצוב כללי ---
+# --- עיצוב CSS מותאם (RTL, צבעי כחול-תכלת, ותיקוני סליידר) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap');
@@ -17,128 +13,120 @@ st.markdown("""
         direction: rtl;
         text-align: right;
         font-family: 'Assistant', sans-serif;
+        background-color: #f0f8ff; /* רקע תכלת עדין */
     }
     
     div[data-testid="stMarkdownContainer"] p, h1, h2, h3, h4, li {
         text-align: right;
+        color: #003366; /* כחול כהה לטקסט */
     }
 
-    /* תיקון ספציפי לסליידר - מנטרל את ה-RTL על הרכיב עצמו כדי שלא יישבר */
-    div[data-testid="stSelectSlider"] {
-        direction: ltr !important;
-    }
-    
-    /* מחזיר את הכותרת של הסליידר לימין */
-    div[data-testid="stSelectSlider"] label {
-        direction: rtl !important;
-        text-align: right !important;
-        display: block;
-    }
-
-    /* תיקון הטקסט של האופציות מתחת לסליידר */
-    div[data-testid="stWidgetLabel"] {
-        direction: rtl !important;
-    }
-
+    /* עיצוב כפתורים בכחול */
     .stButton>button {
         width: 100%;
-        border-radius: 10px;
-        background-color: #ff4b4b;
+        border-radius: 15px;
+        background-color: #4682B4;
         color: white;
+        border: none;
+        font-weight: bold;
+    }
+
+    /* תיקון הסליידר */
+    div[data-testid="stSelectSlider"] { direction: ltr !important; }
+    div[data-testid="stSelectSlider"] label { direction: rtl !important; text-align: right !important; display: block; }
+    
+    /* עיצוב ל-Easter Egg */
+    .easter-egg {
+        background-color: #ffffff;
+        padding: 20px;
+        border-right: 5px solid #4682B4;
+        border-radius: 10px;
+        font-style: italic;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- פונקציות עזר ---
-def calculate_days(start_date):
-    today = date.today()
-    delta = today - start_date
-    return delta.days
+# --- לוגיקה של תאריכים ---
+START_DATE = date(2026, 1, 1)
+days_together = (date.today() - START_DATE).days
 
-# הגדרת תאריך תחילת הקשר (שני לתאריך שלכם)
-ANNIVERSARY = date(2026, 1, 1) 
+# --- תפריט צד ---
+st.sidebar.title(f"שלום {st.sidebar.selectbox('מי גולש עכשיו?', ['עידודו', 'נאנה'])}")
+menu = st.sidebar.radio("לאן נלך?", ["דף הבית", "המסע שלנו (8 שנים!)", "גלריית רגעים", "הקדשה מהלב"])
 
-# --- תפריט צד (Sidebar) ---
-st.sidebar.title("הניווט שלנו 🧭")
-page = st.sidebar.radio("עברי בין הדפים:", 
-    ["הבית שלנו", "ציר זמן של אהבה", "גלריית רגעים", "בוחן פתע", "הקדשה אישית"])
-
-# --- דף 1: דף הבית ---
-if page == "הבית שלנו":
+if menu == "דף הבית":
     st.balloons()
-    st.title("מזל טוב, אהוב שלי! 🎂")
-    st.write("ברוך הבא למקום הקטן שבניתי בשבילך, כדי לחגוג את מי שאתה ואת מה שאנחנו.")
+    st.title(f"מזל טוב, עידודו שלי! 🎂")
+    st.subheader(f"נאנה בנתה לך אתר קטן, כי הגיע הזמן.")
     
-    # הצגת נתונים מספריים
-    days_together = calculate_days(ANNIVERSARY)
     col1, col2 = st.columns(2)
-    with col1:
-        st.metric(label="ימים שאנחנו יחד", value=f"{days_together}")
-    with col2:
-        st.metric(label="חוויות שצברנו", value="∞")
-
+    col1.metric("ימים של אהבה רשמית", f"{days_together}")
+    col2.metric("שנים של חברות", "8")
+    
     st.divider()
-    st.subheader("מדד האהבה היום:")
-    love_score = st.select_slider("כמה אני אוהבת אותך?", options=["המון", "ממש המון", "הכי בעולם", "יותר ממה שאפשר לתאר"])
-    st.write(f"התשובה היא: **{love_score}** (ולא הייתה אופציה אחרת...)")
-
-# --- דף 2: ציר זמן ---
-elif page == "ציר זמן של אהבה":
-    st.header("הדרך שעברנו יחד 🗺️")
-    st.write("כל נקודה היא זיכרון שלא הייתי מחליפה בעד שום הון שבעולם:")
     
-    st.info("**2023:** הדייט הראשון שלנו. המבוכה, החיוכים וההבנה שיש כאן משהו מיוחד.")
-    st.info("**2024:** הטיול ההוא שבו צחקנו עד שכאבה הבטן.")
-    st.info("**2025:** רגעים קטנים של יומיום שהפכו לזיכרונות גדולים.")
-    st.success("ואנחנו רק בהתחלה...")
-
-# --- דף 3: גלריית תמונות ---
-elif page == "גלריית רגעים":
-    st.header("תמונות וזיכרונות 📸")
-    st.write("כאן תמצאי כמה מהרגעים האהובים עליי:")
+    # הבדיחה הפרטית
+    st.warning("⚠️ אזהרת בטיחות חמורה!")
+    st.write("**נא לשלוח אזהרה מראש לפני שליחת תמונות עם טקטי, ריצ'רץ' פתוח ויד מאחורי הראש. נאנה לא עומדת בזה.**")
     
-    # שימוש בטאבים לחלוקת התמונות
-    tab1, tab2 = st.tabs(["רגעים מצחיקים", "רגעים מרגשים"])
+    # מד האהבה
+    st.subheader("מד האהבה היומי:")
+    st.select_slider("", options=["אוהבת", "אוהבת מאוד", "חולה עליך", "עידודו, אין לי מילים"], value="עידודו, אין לי מילים")
+
+elif menu == "המסע שלנו (8 שנים!)":
+    st.header("מכיתה ח' ועד היום... 🗺️")
+    st.write("הדרך שעשינו היא הדבר האהוב עליי:")
+    
+    with st.expander("🎒 ימי החטיבה והתיכון"):
+        st.write("מלהיות חלק מאותה חבורה, לבחור באותה מגמה ופשוט להיות שם אחד בשביל השנייה כל יום בכיתה.")
+    
+    with st.expander("🎆 12.12 - הלילה ששינה הכל"):
+        st.write("מסיבת הגיוס של בן דוד שלך. הרגע שבו אמרת לי מה אתה מרגיש, והרגע שבו הכל פתאום הסתדר בראש.")
+    
+    with st.expander("🥂 1.1.2026 - התחלה חדשה"):
+        st.write("היום שבו הפכנו רשמית ל'אנחנו'. המתנה הכי טובה לשנה החדשה.")
+
+elif menu == "גלריית רגעים":
+    st.header("התמונות שלנו 📸")
+    st.write("קצת רגעים מהשמונה שנים האלו (ועוד כמה שנוספו לאחרונה):")
+    
+    tab1, tab2 = st.tabs(["אנחנו יחד", "עידודו (זהירות, חתיך)"])
     
     with tab1:
-        # st.image("images/funny1.jpg", caption="זוכר מה קרה כאן?")
-        st.write("[כאן תעלי תמונה מהתיקייה images שב-GitHub]")
+        # כאן תשימי 11 תמונות. דוגמה למבנה:
+        cols = st.columns(2)
+        for i in range(1, 12):
+            with cols[i % 2]:
+                # st.image(f"images/together_{i}.jpg")
+                st.write(f"🖼️ תמונה שלנו #{i}")
+                
     with tab2:
-        # st.image("images/sweet1.jpg", caption="אחד הרגעים האהובים עליי")
-        st.write("[כאן תעלי תמונה מהתיקייה images שב-GitHub]")
+        # כאן תשימי 3 תמונות שלו
+        cols_he = st.columns(3)
+        for i in range(1, 4):
+            with cols_he[i-1]:
+                # st.image(f"images/he_{i}.jpg")
+                st.write(f"🌟 עידודו #{i}")
+        st.write("*(בתהליך השגת תמונות ילדות...)*")
 
-# --- דף 4: בוחן פתע ---
-elif page == "בוחן פתע":
-    st.header("כמה אתה מכיר אותנו? 🤔")
-    
-    score = 0
-    q1 = st.radio("מה הדבר שאני הכי אוהבת לעשות איתך?", ["לראות סרט", "סתם לדבר", "לשחק Minecraft", "לטייל"])
-    if q1 == "סתם לדבר": # עדכני לתשובה הנכונה
-        score += 1
-        
-    q2 = st.selectbox("איזה צבע אני הכי אוהבת עליך?", ["כחול", "שחור", "המדים שלך", "לבן"])
-    if q2 == "המדים שלך": # עדכני לתשובה הנכונה
-        score += 1
-        
-    if st.button("סיום הבוחן"):
-        if score == 2:
-            st.snow()
-            st.success("אלוף! אתה מכיר אותי בול.")
-        else:
-            st.warning(f"קיבלת {score}/2. לא נורא, יש לנו את כל החיים להכיר!")
-
-# --- דף 5: הקדשה ---
-elif page == "הקדשה אישית":
-    st.header("משהו קטן מהלב 💌")
+elif menu == "הקדשה מהלב":
+    st.header("משהו ממני אלייך 💌")
     st.write("""
-    כאן את כותבת את כל מה שאת מרגישה...
-    
-    על כמה הוא משמעותי עבורך, על הביטחון שהוא נותן לך, 
-    ועל זה שאת גאה בו (במיוחד עם כל העבודה הקשה בבסיס).
-    
-    מאחלת לנו עוד שנים של צחוק, למידה משותפת וים של אהבה.
+    עידודו שלי, השמונה שנים האלו היו רק ההקדמה לסיפור האמיתי שלנו. 
+    אני כל כך שמחה שבחרנו אחד בשנייה שוב ושוב, מהמגמה בתיכון ועד היום.
     """)
     
-    if st.button("לחץ להפתעה אחרונה"):
+    # ה-Easter Egg (המכתב הארוך)
+    st.write("---")
+    if st.checkbox("יש לך הודעה חדשה מנאנה (לחץ לקריאה)"):
+        st.markdown(f"""
+        <div class="easter-egg">
+        <b>הודעה בתגובה למכתב שלך:</b><br><br>
+        כאן תדביקי את הטקסט הארוך שכתבת לו. 
+        זה המקום לכל המילים העמוקות, התגובות לדברים שהוא כתב לך,
+        וכל הרגש שאת רוצה לשמור רק לשניכם.
+        <br><br>
+        אוהבת אותך הכי בעולם, נאנה.
+        </div>
+        """, unsafe_allow_html=True)
         st.snow()
-        st.write("❤️ אוהבת אותך הכי בעולם! ❤️")
