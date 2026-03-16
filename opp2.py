@@ -55,7 +55,7 @@ def calculate_days(start_date):
     return delta.days
 
 # הגדרת תאריך תחילת הקשר (שני לתאריך שלכם)
-ANNIVERSARY = date(2022, 5, 15) 
+ANNIVERSARY = date(2026, 1, 1) 
 
 # --- תפריט צד (Sidebar) ---
 st.sidebar.title("הניווט שלנו 🧭")
