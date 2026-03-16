@@ -13,7 +13,7 @@ if page == "🏠 פתיחה":
 
     st.title("יש לי הפתעה בשבילך 🎁")
 
-    st.image("PHOTO")
+    st.image("PHOTO.jpg")
 
     st.write("""
     הכנתי משהו קטן בשבילך ❤️  
@@ -28,12 +28,12 @@ elif page == "📸 זיכרונות":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image("PHOTO", caption="רגע ראשון שלנו")
+        st.image("PHOTO.jpg", caption="רגע ראשון שלנו")
 
     with col2:
-        st.image("PHOTO", caption="טיול שלנו")
+        st.image("PHOTO.jpg", caption="טיול שלנו")
 
-    st.image("PHOTO", caption="רגע מצחיק שאני אוהבת")
+    st.image("PHOTO.jpg", caption="רגע מצחיק שאני אוהבת")
 
 # עמוד סוד (Easter Egg)
 elif page == "🕵️ סוד":
@@ -76,4 +76,4 @@ elif page == "🎂 הברכה":
         תודה שאתה בחיים שלי ❤️
         """)
 
-        st.image("PHOTO")
+        st.image("PHOTO.jpg")
