@@ -6,23 +6,23 @@ import random
 # הגדרות דף
 st.set_page_config(page_title="עבור עידודו ❤️", page_icon="❤️", layout="wide")
 
-# --- CSS כחול, נקי ומותאם למובייל ---
+# --- CSS חם, נקי ומותאם למובייל ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
 
 :root {
-    --bg-blue: #f0f2f6; 
-    --warm-text: #1f2937;  
-    --accent-blue: #60a5fa;
+    --soft-cream: #FFF9F5; 
+    --warm-text: #432818;  
+    --accent-pink: #ffb5a7;
     --card-bg: #ffffff;
 }
 
-html, body, [data-testid="stAppViewContainer"] {
+html, body, .main {
     direction: rtl;
     text-align: right;
     font-family: 'Assistant', sans-serif;
-    background-color: var(--bg-blue);
+    background-color: var(--soft-cream);
     color: var(--warm-text);
 }
 
@@ -30,15 +30,14 @@ html, body, [data-testid="stAppViewContainer"] {
     background: var(--card-bg);
     padding: 20px;
     border-radius: 20px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #f8ad9d;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin: 0 auto 15px auto;
-    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(248, 173, 157, 0.15);
+    margin-bottom: 15px;
 }
 
 .cute-card h3 {
-    color: #1e40af !important;
+    color: #f08080 !important;
     margin-bottom: 5px;
     font-size: 32px;
 }
@@ -54,12 +53,14 @@ html, body, [data-testid="stAppViewContainer"] {
     border-radius: 15px;
     margin-bottom: 10px;
     object-fit: cover;
-    max-height: 400px;
+    max-height: 450px;
 }
 
 @media (max-width: 768px) {
-    .block-container { padding: 1rem !important; }
-    h1 { font-size: 24px !important; }
+    [data-testid="column"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -108,35 +109,33 @@ elif page == "רגעים קטנים":
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
-    TOTAL_PHOTOS = 23  
+    TOTAL_PHOTOS = 14 # תוודאי שזה המספר המדויק
     
-    if 'photo_order' not in st.session_state:
-        st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
-        random.shuffle(st.session_state.photo_order)
-
-    # יצירת Placeholder כדי שהתמונות יתחלפו באותו מקום
-    photo_placeholder = st.empty()
+    # מיכל ריק שבו נחליף את התוכן בכל פעם
+    container = st.empty()
     
-    # כפתור ערבוב
-    if st.button("ערבב מחדש 🎲"):
-        random.shuffle(st.session_state.photo_order)
-        st.rerun()
-
-    # לולאת הצגה מתחלפת
-    for num in st.session_state.photo_order:
-        # נסיון לטעון את התמונה (שימי לב לשם הקובץ ב-GitHub!)
-        image_filename = f"Image_{num}.jpg"
+    # יצירת רשימה רנדומלית
+    nums = list(range(1, TOTAL_PHOTOS + 1))
+    random.shuffle(nums)
+    
+    # הלולאה שרצה על התמונות
+    for n in nums:
+        # כאן אנחנו בונים את שם הקובץ המדויק
+        img_name = f"PHOTO_{n}.jpg"
         
-        with photo_placeholder.container():
+        with container.container():
             st.markdown(f"""
             <div class="cute-card">
-                <img src="{image_filename}" class="gallery-img" 
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/500x400?text=Image+Not+Found+{num}';">
-                <p>רגע מתוק #{num}</p>
+                <img src="app/static/{img_name}" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x300?text=Missing+Photo+{n}'">
+                <p>רגע מתוק #{n}</p>
             </div>
             """, unsafe_allow_html=True)
-        
-        time.sleep(4) # המתנה של 4 שניות בין תמונה לתמונה
+            # אם התמונות לא בתיקיית static, פשוט תשני את ה-src ל: {img_name}
+            
+        time.sleep(4)
+    
+    if st.button("סיבוב נוסף?"):
+        st.rerun()
 
 # --- דף 4: הפתעה חסויה ---
 elif page == "הפתעה חסויה 🔒":
@@ -154,7 +153,7 @@ elif page == "הפתעה חסויה 🔒":
         st.divider()
         st.subheader("המכתב שלי אליך")
         st.markdown("""
-        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px dashed #60a5fa; color: #1f2937;">
+        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px dashed #f08080; color: #432818;">
         עידודו שלי,<br><br>
         אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
         אני אוהבת אותך המון,<br>
