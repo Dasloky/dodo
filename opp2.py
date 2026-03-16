@@ -71,6 +71,17 @@ padding:18px;
 font-size:14px;
 }
 
+.stat-card h3{
+color:#0284c7;
+margin-bottom:8px;
+}
+
+.stat-card p{
+color:#334155 !important;
+font-size:16px;
+margin:0;
+}
+
 [data-testid="stSidebar"]{
 width:100% !important;
 }
