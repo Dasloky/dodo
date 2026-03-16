@@ -118,7 +118,7 @@ elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
     # הגדרת כמות התמונות שיש לך ב-Git
-    TOTAL_PHOTOS = 14  # תשני למספר המדויק שיש לך
+    TOTAL_PHOTOS = 23  # תשני למספר המדויק שיש לך
     
     photo_placeholder = st.empty()
     
@@ -128,7 +128,7 @@ elif page == "קיר זיכרונות":
         random.shuffle(st.session_state.photo_order)
 
     for num in st.session_state.photo_order:
-        image_filename = f"PHOTO_{num}.jpg"
+        image_filename = f"Image_{num}.jpg"
         
         with photo_placeholder.container():
             st.markdown(f"""
