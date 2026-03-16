@@ -7,168 +7,182 @@ import pandas as pd
 # הגדרות דף
 st.set_page_config(page_title="NANA & IDUDU OS", page_icon="📊", layout="wide")
 
-# --- CSS מלוטש: צבעים מודרניים ו-RTL ---
+# --- CSS מעצב: פלטת צבעים יוקרתית ו-RTL מושלם ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap');
     
+    /* הגדרות גוף הדף */
     html, body, [data-testid="stSidebarNav"], .main {
         direction: rtl;
         text-align: right;
         font-family: 'Assistant', sans-serif;
-        background: #F1F5F9; /* רקע אפור-תכלת בהיר מאוד */
+        background-color: #F8FAFC; /* לבן-אפור נקי */
     }
 
-    /* עיצוב כרטיסיות המדדים (Metrics) */
-    [data-testid="stMetric"] {
+    /* עיצוב כרטיסיות המדדים */
+    div[data-testid="stMetric"] {
         background: white;
         padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-bottom: 4px solid #0EA5E9; /* קו תכלת תחתון */
     }
-    
-    /* עיצוב ה-Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #0F172A;
-        color: white;
-    }
-    [data-testid="stSidebar"] * { color: white !important; }
 
     /* כותרות */
-    h1, h2, h3 { color: #0EA5E9 !important; font-weight: 700; }
+    h1, h2, h3 {
+        color: #0F172A !important; /* כחול כהה מאוד */
+        font-weight: 700;
+    }
 
-    /* תיקון טקסט כללי */
+    /* עיצוב ה-Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #0F172A !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: #F8FAFC !important;
+    }
+
+    /* עיצוב כללי של בלוקים */
+    .stAlert {
+        border-radius: 12px;
+    }
+    
+    /* ביטול שוליים מיותרים בגרפים */
+    .stPlotlyChart {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+    }
+    
+    /* טקסטים מיושרים לימין */
     .stMarkdown, div[data-testid="stMarkdownContainer"] p {
         text-align: right;
         direction: rtl;
-        color: #1E293B;
-    }
-
-    /* עיצוב גרפים */
-    .stChart {
-        background: white;
-        padding: 15px;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- נתונים למערכת ---
+# --- לוגיקה ונתונים ---
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
-# נתונים לגרפים
+# נתונים לגרפים אסתטיים
 miss_you_df = pd.DataFrame({
-    "יום": ["א", "ב", "ג", "ד", "ה", "ו", "ש"],
-    "געגוע": [85, 90, 100, 95, 75, 30, 20]
+    "יום": ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"],
+    "רמת געגוע": [70, 85, 100, 90, 75, 20, 15]
 }).set_index("יום")
 
-activity_df = pd.DataFrame({
-    "פעילות": ["מיינקראפט", "שיחות", "עבודה", "שינה"],
-    "שעות שבועיות": [15, 30, 45, 50]
-}).set_index("פעילות")
+activity_dist = pd.DataFrame({
+    "קטגוריה": ["שיחות", "מיינקראפט", "מחשבות", "עבודה"],
+    "אחוז": [30, 15, 40, 15]
+}).set_index("קטגוריה")
 
 # --- תפריט צד ---
 with st.sidebar:
-    st.title("מערכת שליטה 🚀")
-    page = st.selectbox("בחר תצוגה:", ["דשבורד ראשי", "דאטה וסטטיסטיקה", "גלריה חיה", "כספת חסויה 🔒"])
-    st.divider()
-    st.write(f"משתמש: **עידודו**")
-    st.write(f"גרסה: **4.2.0**")
+    st.title("MISSION CONTROL")
+    st.write("---")
+    page = st.radio("תפריט מערכת:", 
+                    ["Dashboard", "Data Analytics", "Visual Archive", "Classified 🔒"])
+    st.write("---")
+    st.caption("User: Ido | Admin: Nana")
 
-# --- דף 1: דשבורד ראשי ---
-if page == "דשבורד ראשי":
-    st.title("Dashboard: Love Metrics 📈")
+# --- דף 1: Dashboard (עיצוב אסתטי נקי) ---
+if page == "Dashboard":
+    st.title("סטטוס מערכת בזמן אמת 📊")
     
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("ימים כזוג", days_together, "↑ 100%")
-    c2.metric("שנות חברות", "8", "Original")
-    c3.metric("סינכרון מוחי", "99.9%", "Stable")
-    c4.metric("רמת אנרגיה", "Low", "-5% (צריך דייט)")
+    # שורת מדדים בסטייל נקי
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("ימי זוגיות", days_together)
+    m2.metric("שנות היכרות", "8")
+    m3.metric("סטטוס סנכרון", "חיובי")
+    m4.metric("מדד אושר", "MAX")
 
-    st.divider()
+    st.write("---")
     
     col_a, col_b = st.columns(2)
     with col_a:
-        st.subheader("📈 מגמת געגוע (שבועי)")
-        st.area_chart(miss_you_df, color="#0EA5E9")
+        st.subheader("📈 ניתוח געגוע שבועי")
+        st.area_chart(miss_you_df, color="#0EA5E9") # תכלת נקי
     with col_b:
-        st.subheader("📊 חלוקת משאבי זמן")
-        st.bar_chart(activity_df, color="#6366F1")
-
-    st.info("💡 **הערת מערכת:** נרשמה חריגה חיובית בכמות החיוכים מאז תחילת הקשר.")
-
-# --- דף 2: דאטה וסטטיסטיקה (הדף השני המורחב) ---
-elif page == "דאטה וסטטיסטיקה":
-    st.title("עמוק לתוך הנתונים 💾")
-    st.write("ניתוח כמותי של 8 שנות היכרות:")
-    
-    # כרטיסיות נתונים מפורטות
-    row1_c1, row1_c2 = st.columns(2)
-    with row1_c1:
-        st.subheader("🏠 נתונים לוגיסטיים")
-        st.write("- **נסיעות בקו בסיס-בית:** ~520 (מבוסס על יומיות)")
-        st.write("- **טוסטים שנאכלו יחד:** 142")
-        st.write("- **שעות מצטברות בשיחות וידאו:** 1,200+")
+        st.subheader("📊 התפלגות משאבים")
+        st.bar_chart(activity_dist, color="#1E293B") # כחול כהה מקצועי
         
-    with row1_c2:
-        st.subheader("🎮 גיימינג ומיינקראפט")
-        st.write("- **בלוקים שנחצבו:** 1,000,000+")
-        st.write("- **פעמים שעידודו הציל את נאנה:** ∞")
-        st.write("- **בתים שנבנו ונהרסו:** 12")
+    st.success("דיווח מערכת: כל המדדים בטווח התקין. מומלץ להמשיך באותה מגמה.")
 
-    st.divider()
-    st.subheader("📅 ציר זמן של אירועים קריטיים")
-    st.table(pd.DataFrame({
-        "אירוע": ["היכרות חטיבה", "מעבר למגמה", "מסיבת הגיוס", "החלטה רשמית"],
-        "סטטוס": ["חברים", "חברים טובים", "וידוי", "אהבה"],
-        "שנה": ["2018", "2020", "2025", "2026"]
-    }))
-
-# --- דף 3: גלריה חיה ---
-elif page == "גלריה חיה":
-    st.title("Visual Archive 📸")
-    placeholder = st.empty()
+# --- דף 2: Data Analytics (מורחב) ---
+elif page == "Data Analytics":
+    st.title("ניתוח נתונים מצטבר 💾")
     
-    # גלריה של 3 תמונות בו זמנית
-    for _ in range(5):
-        c1, c2, c3 = st.columns(3)
-        nums = random.sample(range(1, 15), 3)
-        c1.image("PHOTO.jpg", caption=f"קובץ #{nums[0]}", use_container_width=True)
-        c2.image("PHOTO.jpg", caption=f"קובץ #{nums[1]}", use_container_width=True)
-        c3.image("PHOTO.jpg", caption=f"קובץ #{nums[2]}", use_container_width=True)
+    tab1, tab2 = st.tabs(["סטטיסטיקות", "ציר זמן"])
+    
+    with tab1:
+        c1, c2 = st.columns(2)
+        with c1:
+            st.info("**נתוני גיימינג**")
+            st.write("- שעות במיינקראפט: 500+")
+            st.write("- בתים משותפים: 14")
+            st.write("- מקרי 'נאנה הלכה לאיבוד במערה': ∞")
+        with c2:
+            st.info("**נתוני שירות (יומיות)**")
+            st.write("- קילומטרז' מצטבר בנסיעות: 15,400 ק\"מ")
+            st.write("- שיחות טלפון בזמן המתנה לאוטובוס: 1,240")
+            st.write("- כריכים שעידודו שכח בבית: 12")
+
+    with tab2:
+        st.table(pd.DataFrame({
+            "שנה": ["2018", "2020", "2025", "2026"],
+            "שלב": ["היכרות חטיבה", "מעבר למגמה", "הלילה ב-12.12", "תחילת הדרך"],
+            "תיאור": ["חברים לספסל הלימודים", "שותפות גורל במגמה", "מסיבת גיוס ששינתה הכל", "אנחנו."]
+        }))
+
+# --- דף 3: Visual Archive (החזרת התמונות המתחלפות) ---
+elif page == "Visual Archive":
+    st.title("ארכיון ויזואלי 📸")
+    st.write("התמונות מתחלפות אוטומטית בכל 4 שניות...")
+    
+    # Placeholder יחיד לתמונה כדי לשמור על גודל קבוע ואסתטי
+    image_spot = st.empty()
+    
+    for i in range(1, 15):
+        # בחירת תמונה אקראית או לפי סדר (כרגע PHOTO.jpg)
+        image_spot.image("PHOTO.jpg", 
+                         caption=f"קובץ זיכרון #{i} מתוך 14", 
+                         use_container_width=True)
         time.sleep(4)
-
-# --- דף 4: כספת חסויה (החידה החדשה) ---
-elif page == "כספת חסויה 🔒":
-    st.title("כניסה לאזור מוצפן 🔒")
     
-    st.subheader("חידת פתיחה (Security Challenge):")
-    st.write("""
-    כדי לקבל גישה למכתב, עליך לפתור את המשוואה הבאה:
-    **כמות השנים שאנחנו מכירים** כפול **היום בחודש שבו הכל השתנה (הווידוי)**.
+    st.button("הפעל סבב נוסף")
+
+# --- דף 4: Classified 🔒 (החידה החדשה) ---
+elif page == "Classified 🔒":
+    st.title("גישה למורשים בלבד 🔒")
+    st.write("אנא פתור את החידה כדי לשחרר את הצפנת המכתב:")
+    
+    st.markdown("""
+    > **החידה:**
+    > קח את מספר השנים שאנחנו מכירים (8), 
+    > הכפל אותו ביום בחודש שבו הכל השתנה (הווידוי), 
+    > וחסר מהתוצאה את מספר האחים שלך.
     """)
     
-    # רמז: 8 שנים * 12 (היום של ה-12.12) = 96
-    user_input = st.number_input("הכנס את התוצאה המספרית:", step=1, value=0)
+    # חישוב: (8 * 12) - 2 = 94 (בהנחה שיש לו 2 אחים לפי הסיכום)
+    ans = st.number_input("הזן תוצאה סופית:", value=0, step=1)
     
-    if user_input == 96:
-        st.success("✅ אימות הצליח. פותחת קבצים חסויים...")
+    if ans == 94:
         st.balloons()
+        st.success("אימות הצליח. פותחת קבצים...")
         
-        # ה-Easter Egg
-        st.error("🚨 **התראה:** זוהתה חריגה בנהלי 'לבוש טקטי'. נאנה דורשת סגירת ריצ'רץ' מיידית!")
+        st.error("🚨 **התראה ביטחונית:** תמונות טקטי ללא אישור מהוות עבירה חמורה. נאנה דורשת הסברים!")
         
-        st.divider()
-        st.subheader("מכתב מנאנה ❤️")
-        st.info("""
+        st.write("---")
+        st.subheader("המכתב שלי ❤️")
+        st.write("""
         עידודו שלי,
-        אין גרף בעולם שיכול לתאר כמה אני אוהבת אותך. 
-        אחרי 8 שנים, כל נתון רק מוכיח שאתה הבחירה הכי טובה שעשיתי.
+        אחרי 8 שנים, המילים הן רק דאטה. מה שחשוב זה מה שיש בינינו.
+        אני אוהבת אותך יותר מכל קוד שאי פעם אכתוב.
+        
         [כאן תדביקי את המכתב שלך]
         """)
         st.snow()
-    elif user_input != 0:
-        st.error("❌ טעות בחישוב. נסה שוב, דאטה-בוי.")
+    elif ans != 0:
+        st.error("קוד שגוי. נסה שוב.")
