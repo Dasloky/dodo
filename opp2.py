@@ -1,61 +1,79 @@
 import streamlit as st
 
-st.set_page_config(page_title="Birthday Surprise ❤️")
+st.set_page_config(page_title="Birthday Surprise ❤️", layout="centered")
 
-if "stage" not in st.session_state:
-    st.session_state.stage = 0
+# תפריט ניווט
+page = st.sidebar.radio(
+    "ניווט",
+    ["🏠 פתיחה", "📸 זיכרונות", "🕵️ סוד", "🎂 הברכה"]
+)
 
 # עמוד פתיחה
-if st.session_state.stage == 0:
+if page == "🏠 פתיחה":
 
     st.title("יש לי הפתעה בשבילך 🎁")
 
-    st.image("photo.jpg")
+    st.image("PHOTO")
 
-    if st.button("תתחיל"):
-        st.session_state.stage = 1
+    st.write("""
+    הכנתי משהו קטן בשבילך ❤️  
+    תשתמש בתפריט בצד כדי לגלות הכל
+    """)
 
-# גלריית זיכרונות
-elif st.session_state.stage == 1:
+# עמוד זיכרונות
+elif page == "📸 זיכרונות":
 
-    st.header("כמה רגעים שאני אוהבת ❤️")
+    st.title("כמה רגעים שאני אוהבת ❤️")
 
-    st.image("photo.jpg", caption="הדייט הראשון שלנו")
+    col1, col2 = st.columns(2)
 
-    if st.button("המשך"):
-        st.session_state.stage = 2
+    with col1:
+        st.image("PHOTO", caption="רגע ראשון שלנו")
 
-# מסך Easter Egg
-elif st.session_state.stage == 2:
+    with col2:
+        st.image("PHOTO", caption="טיול שלנו")
 
-    st.header("יש פה הפתעה סודית...")
+    st.image("PHOTO", caption="רגע מצחיק שאני אוהבת")
+
+# עמוד סוד (Easter Egg)
+elif page == "🕵️ סוד":
+
+    st.title("יש כאן משהו סודי...")
+
+    st.write("רק כפתור אחד יגלה את ההפתעה")
 
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.button("🐱")
+        if st.button("🐱"):
+            st.toast("לא זה 😅")
 
     with col2:
-        st.button("🎮")
+        if st.button("🍕"):
+            st.toast("כמעט")
 
     with col3:
-        if st.button("❤️"):
-            st.session_state.stage = 3
+        if st.button("🎮"):
+            st.toast("נסה שוב")
 
     with col4:
-        st.button("🍕")
+        if st.button("❤️"):
+            st.session_state.secret_found = True
+            st.success("מצאת את הסוד 😉")
 
-# הודעת ברכה
-elif st.session_state.stage == 3:
+# עמוד הברכה
+elif page == "🎂 הברכה":
 
-    st.balloons()
+    if "secret_found" not in st.session_state:
+        st.warning("צריך למצוא את הסוד קודם 😉")
+    else:
+        st.balloons()
 
-    st.title("יום הולדת שמח אהוב שלי 🎂")
+        st.title("יום הולדת שמח אהוב שלי 🎂")
 
-    st.write("""
-    תודה שאתה בחיים שלי.  
-    מאז ה-1.1.26 כל יום איתך מיוחד.  
-    אני אוהבת אותך ❤️
-    """)
+        st.write("""
+        מאז ה-1.1.26 כל יום איתך מיוחד יותר.  
+        תודה שאתה בחיים שלי ❤️
+        """)
 
-    st.image("photo.jpg")
+        st.image("PHOTO")
