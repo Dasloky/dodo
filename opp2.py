@@ -81,27 +81,29 @@ days_together = (date.today() - START_DATE).days
 st.write("### היי עידודו 👋")
 page = st.selectbox(
     "לאן נטייל?",
-    ["הבית שלנו", "רגעים קטנים", "קיר זיכרונות", "הפתעה חסויה 🔒"],
+    ["קודם כל", "רגעים קטנים", "קיר זיכרונות", "הפתעה חסויה 🔒"],
     label_visibility="visible"
 )
 st.divider()
 
 # --- דף 1: הבית שלנו ---
-if page == "הבית שלנו":
+if page == "קודם כל":
     st.title("הפינה שלנו ❤️")
     
-    col1, col2 = st.columns(2)
+    col1, col2, col2 = st.columns(3)
     with col1:
         st.markdown(f'<div class="cute-card"><h3>{days_together}</h3><p>ימים שאנחנו ביחד</p></div>', unsafe_allow_html=True)
     with col2:
         st.markdown('<div class="cute-card"><h3>8</h3><p>שנים של חברות אמת</p></div>', unsafe_allow_html=True)
+    with col3:
+        st.markdown('<div class="cute-card"><h3>∞</h3><p>כמות המחשבות שלי עליך</p></div>', unsafe_allow_html=True)
     
     st.write("---")
     st.write("כיף שאתה כאן. האתר הזה הוא רק בשבילך.")
 
 # --- דף 2: רגעים קטנים ---
 elif page == "רגעים קטנים":
-    st.title("דברים שאולי שכחת... ✨")
+    st.title("עמוד נורמלי לגמרי")
     
     c1, c2, c3 = st.columns(3)
     with c1:
@@ -114,7 +116,6 @@ elif page == "רגעים קטנים":
 # --- דף 3: קיר זיכרונות (תמונה אחת מתחלפת) ---
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
-    st.write("התמונה תתחלף בעצמה כל כמה שניות...")
     
     # מיכל יחיד לתמונה אחת גדולה וברורה
     photo_placeholder = st.empty()
