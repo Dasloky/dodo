@@ -179,7 +179,7 @@ elif page == "קיר זיכרונות":
 elif page == "הפתעה חסויה 🔒":
     st.title("כספת הלב 🔒")
     
-    target_clicks = 5 
+    target_clicks = 100
     
     if st.session_state.clicks < target_clicks:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
