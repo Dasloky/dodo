@@ -2,48 +2,19 @@ import streamlit as st
 from datetime import date
 import time
 import random
-import streamlit.components.v1 as components
 
 # הגדרות דף
 st.set_page_config(page_title="עבור עידודו ❤️", page_icon="❤️", layout="wide")
 
-# --- פונקציה לאפקט לבבות נופלים (JavaScript) ---
-def rain_hearts():
-    components.html(
-        """
-        <div id="hearts-container" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;"></div>
-        <script>
-            function createHeart() {
-                const heart = document.createElement("div");
-                heart.innerHTML = "❤️";
-                heart.style.position = "fixed";
-                heart.style.left = Math.random() * 100 + "vw";
-                heart.style.top = "-5vh";
-                heart.style.fontSize = (Math.random() * 20 + 10) + "px";
-                heart.style.opacity = Math.random();
-                heart.style.transform = `rotate(${Math.random() * 360}deg)`;
-                heart.style.transition = "top 3s linear, opacity 3s";
-                
-                document.getElementById("hearts-container").appendChild(heart);
-                
-                setTimeout(() => {
-                    heart.style.top = "105vh";
-                    heart.style.opacity = "0";
-                }, 100);
-                
-                setTimeout(() => {
-                    heart.remove();
-                }, 3000);
-            }
-            for(let i=0; i<50; i++) {
-                setTimeout(createHeart, i * 100);
-            }
-        </script>
-        """,
-        height=0,
-    )
+# ניהול State
+if 'clicks' not in st.session_state:
+    st.session_state.clicks = 0
+if 'current_reason' not in st.session_state:
+    st.session_state.current_reason = None
+if 'last_page' not in st.session_state:
+    st.session_state.last_page = "קודם כל"
 
-# --- CSS חם, נקי ומותאם למובייל ---
+# --- CSS עם אנימציית לבבות מובנית ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -85,6 +56,22 @@ html, body, .main {
     margin: 0;
 }
 
+/* אנימציית לבבות נופלים */
+@keyframes hearts-fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
+    100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
+}
+
+.heart-particle {
+    position: fixed;
+    color: #ffb5a7;
+    font-size: 24px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 9999;
+    animation: hearts-fall 3s linear forwards;
+}
+
 @media (max-width: 768px) {
     [data-testid="column"] {
         width: 100% !important;
@@ -94,15 +81,18 @@ html, body, .main {
 </style>
 """, unsafe_allow_html=True)
 
+# פונקציה ליצירת הלבבות ויזואלית
+def trigger_hearts():
+    heart_html = ""
+    for i in range(20):
+        left = random.randint(0, 95)
+        delay = random.uniform(0, 2)
+        heart_html += f'<div class="heart-particle" style="left:{left}%; animation-delay:{delay}s;">❤️</div>'
+    st.markdown(heart_html, unsafe_allow_html=True)
+
 # לוגיקת תאריכים
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
-
-# ניהול State
-if 'clicks' not in st.session_state:
-    st.session_state.clicks = 0
-if 'current_reason' not in st.session_state:
-    st.session_state.current_reason = None
 
 # --- ניווט עליון ---
 st.write("### היי עידודו 👋")
@@ -111,6 +101,14 @@ page = st.selectbox(
     ["קודם כל", "סיבות לחייך", "קיר זיכרונות", "הפתעה חסויה 🔒"],
     label_visibility="visible"
 )
+
+# --- מנגנון איפוס במעבר דפים ---
+if page != st.session_state.last_page:
+    st.session_state.clicks = 0  # איפוס לחיצות בחידה
+    st.session_state.current_reason = None  # איפוס המשפט בדף הסיבות
+    st.session_state.last_page = page
+    st.rerun()
+
 st.divider()
 
 # --- דף 1: קודם כל ---
@@ -145,7 +143,8 @@ elif page == "סיבות לחייך":
     st.write("תלחץ על הכפתור כדי לקבל קצת אהבה:")
     if st.button("לחץ כאן למשהו קטן וטוב ✨"):
         st.session_state.current_reason = random.choice(reasons)
-        rain_hearts() # הלבבות יורדים כאן!
+        trigger_hearts()
+        st.balloons()
     
     if st.session_state.current_reason:
         st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
@@ -187,16 +186,16 @@ elif page == "הפתעה חסויה 🔒":
         
         progress = st.session_state.clicks / target_clicks
         st.progress(progress)
+        st.write(f"מדד אהבה: {int(progress * 100)}%")
         
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
-            if st.session_state.clicks == target_clicks:
-                st.toast("הכספת נפתחת...", icon="🔓")
             st.rerun()
             
     else:
         st.success("הכספת נפתחה! ❤️")
-        rain_hearts() # לבבות יורדים בפתיחה!
+        trigger_hearts()
+        st.balloons()
         
         st.divider()
         st.subheader("המכתב שלי אליך")
