@@ -154,20 +154,29 @@ else:
         st.markdown(f'<div class="cute-card"><p style="font-size:20px; text-align:right;">{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
 
     st.divider()
-    st.subheader("כספת הלב 🔒")
+st.subheader("כספת הלב 🔒")
+    target_clicks = 2
     
-    if st.session_state.clicks < 2:
-        st.progress(st.session_state.clicks / 2)
+    if st.session_state.clicks < target_clicks:
+        st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
+        st.progress(st.session_state.clicks / target_clicks)
+        
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
     else:
         st.success("הכספת נפתחה! ❤️")
         st.markdown("""
-        <div style="background: white; padding: 25px; border-radius: 15px; border: 1px solid #D63384; text-align: right;">
-            <b>עידודו שלי,</b><br> תודה על מי שאתה. אוהבת המון, נאנה.
+        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center; line-height: 1.6;">
+            <b>עידודו שלי,</b><br><br>
+            אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
+            תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
+            אני אוהבת אותך המון,<br>
+            <b>נאנה</b>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("לנעול מחדש 🔐"):
+        
+        st.write("")
+        if st.button("לנעול מחדש? 🔐"):
             st.session_state.clicks = 0
             st.rerun()
