@@ -14,7 +14,7 @@ if 'current_reason' not in st.session_state:
 if 'last_page' not in st.session_state:
     st.session_state.last_page = "הפינה של עידודו ❤️"
 
-# --- CSS מעודכן ונקי ---
+# --- CSS נקי ובטוח ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -80,23 +80,26 @@ def trigger_hearts():
     st.markdown(heart_html, unsafe_allow_html=True)
 
 # לוגיקת תאריכים
-START_DATE = date(2025, 12, 1) # עדכני לתאריך הנכון שלכם
+START_DATE = date(2026, 1, 1) # תשני לתאריך הנכון שלכם
 days_together = (date.today() - START_DATE).days
 
 # --- תפריט ניווט ---
-st.write(f"### היי עידודו 👋")
+st.write("### היי עידודו 👋")
 page = st.selectbox("לאן נטייל?", ["הפינה של עידודו ❤️", "קיר זיכרונות 📸"])
 
-# איפוס במעבר דף כדי למנוע "שאריות"
+# מנגנון ניקוי במעבר דף
 if page != st.session_state.last_page:
     st.session_state.last_page = page
     st.rerun()
 
-# --- עמוד 1: הכל ביחד (1, 2, 4) ---
+st.divider()
+
+# ==========================================
+# עמוד 1: הפינה של עידודו 
+# ==========================================
 if page == "הפינה של עידודו ❤️":
     st.title("הפינה שלנו ❤️")
     
-    # חלק 1: כרטיסיות
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f'<div class="cute-card"><h3>{max(0, days_together)}</h3><p>ימים שאנחנו ביחד</p></div>', unsafe_allow_html=True)
@@ -107,17 +110,18 @@ if page == "הפינה של עידודו ❤️":
     
     st.divider()
     
-    # חלק 2: סיבות לחייך
     st.subheader("למה אתה העידודו שלי? ✨")
     reasons = [
         "בגלל החיוך שגורם לי לשכוח מהכל",
         "בגלל שאתה תמיד יודע מה להגיד כשקשה",
         "בגלל הדרך שבה אתה מצחיק אותי עד דמעות",
-        "בגלל שאתה הבית שלי",
-        "בגלל המבט הזה ששמור רק לי"
+        "בגלל 8 שנים של חברות שהיא הבית שלי",
+        "בגלל שאתה פשוט... אתה.",
+        "בגלל המבט הזה ששמור רק לי",
+        "בגלל שאתה החבר הכי טוב שיכולתי לבקש"
     ]
     
-    if st.button("לחץ למשהו קטן וטוב ✨"):
+    if st.button("לחץ כאן למשהו קטן וטוב ✨"):
         st.session_state.current_reason = random.choice(reasons)
         trigger_hearts()
     
@@ -126,47 +130,59 @@ if page == "הפינה של עידודו ❤️":
 
     st.divider()
 
-    # חלק 3: כספת
     st.subheader("כספת הלב 🔒")
-    if st.session_state.clicks < 2:
-        st.write("מלא את מדד האהבה כדי לפתוח:")
-        st.progress(st.session_state.clicks / 2)
+    target_clicks = 2
+    
+    if st.session_state.clicks < target_clicks:
+        st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
+        st.progress(st.session_state.clicks / target_clicks)
+        
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
     else:
-        st.success("הכספת נפתחה!")
+        st.success("הכספת נפתחה! ❤️")
         st.markdown("""
-        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center;">
-            <p>עידודו שלי, תודה על 8 שנים מדהימות. אוהבת אותך, נאנה ❤️</p>
+        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center; line-height: 1.6;">
+            <b>עידודו שלי,</b><br><br>
+            אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
+            תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
+            אני אוהבת אותך המון,<br>
+            <b>נאנה</b>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("לנעול מחדש 🔐"):
+        
+        st.write("")
+        if st.button("לנעול מחדש? 🔐"):
             st.session_state.clicks = 0
             st.rerun()
 
-# --- עמוד 2: קיר זיכרונות ---
+# ==========================================
+# עמוד 2: קיר זיכרונות (מתחלף אוטומטית)
+# ==========================================
 elif page == "קיר זיכרונות 📸":
     st.title("הזיכרונות שלנו 📸")
-    st.write("התמונות מתחלפות אוטומטית כל כמה שניות...")
+    st.write("פשוט שבו אחורה ותהנו מהרגעים... ✨")
     
     TOTAL_PHOTOS = 27
     if 'photo_order' not in st.session_state:
         st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
         random.shuffle(st.session_state.photo_order)
         
+    # מיכל אחד ריק שמתעדכן מבלי "ללכלך" את שאר הדף
     placeholder = st.empty()
     
-    # לולאת הצגה נקייה
-    for num in st.session_state.photo_order:
-        with placeholder.container():
-            img_path = f"Image_{num}.jpg"
-            try:
-                st.image(img_path, use_container_width=True)
-                st.info(f"רגע מתוק #{num}")
-            except:
-                st.warning(f"לא מצאתי את תמונה מספר {num} (ודאי שהשם נכון: Image_{num}.jpg)")
+    # לולאה שרצה אוטומטית על כל התמונות
+    while True:
+        for num in st.session_state.photo_order:
+            # כל סיבוב אנחנו דורסים את המיכל עם התמונה החדשה
+            with placeholder.container():
+                img_path = f"Image_{num}.jpg"
+                try:
+                    st.image(img_path, use_container_width=True)
+                    st.markdown(f"<h4 style='text-align:center; color:#f08080; margin-top:10px;'>רגע מתוק #{num}</h4>", unsafe_allow_html=True)
+                except:
+                    st.warning(f"מחכה לתמונה... (ודאי שהשם נכון: Image_{num}.jpg)")
             
+            # ממתין 4 שניות לפני התמונה הבאה
             time.sleep(4)
-            # ב-Streamlit, לולאות עם sleep יכולות להיות כבדות. 
-            # אם את רוצה שזה יפסיק כשהוא עובר דף, ה-rerun למעלה דואג לזה.
