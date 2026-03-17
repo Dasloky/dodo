@@ -149,21 +149,24 @@ if current_page == "הפינה של עידודו ❤️":
     if st.session_state.clicks < target_clicks:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
         st.progress(st.session_state.clicks / target_clicks)
+        
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
     else:
         st.success("הכספת נפתחה! ❤️")
         st.markdown("""
-        <div style="background: white; padding: 25px; border-radius: 15px; border: 1px solid #D63384; text-align: right; line-height: 1.6;">
-            <b style="color:#D63384;">עידודו שלי,</b><br><br>
+        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center; line-height: 1.6;">
+            <b>עידודו שלי,</b><br><br>
             אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
             תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
             אני אוהבת אותך המון,<br>
             <b>נאנה</b>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("לנעול מחדש 🔐"):
+        
+        st.write("")
+        if st.button("לנעול מחדש? 🔐"):
             st.session_state.clicks = 0
             st.rerun()
 
