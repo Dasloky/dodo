@@ -152,27 +152,36 @@ elif page == "סיבות לחייך":
         st.info("מחכה ללחיצה שלך...")
 
 # --- דף 3: קיר זיכרונות ---
+
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
     TOTAL_PHOTOS = 23  
     
+    placeholder = st.empty()
+    
     if 'photo_order' not in st.session_state:
         st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
         random.shuffle(st.session_state.photo_order)
-
-    placeholder = st.empty()
-    current_photo = random.choice(st.session_state.photo_order)
-    img_path = f"Image_{current_photo}.jpg"
-    
-    with placeholder.container():
-        try:
-            st.image(img_path, use_container_width=True)
-            st.markdown(f"<p style='text-align:center;'>רגע מתוק #{current_photo}</p>", unsafe_allow_html=True)
-        except:
-            st.write(f"כאן תופיע תמונה מספר {current_photo}")
-    
-    if st.button("תמונה אחרת? 🔄"):
+        
+    for num in st.session_state.photo_order:
+        img_path = f"Image_{num}.jpg"
+        
+        with placeholder.container():         
+            
+            # הצגת התמונה - היא תיכנס אוטומטית לתוך הדיב שמעליה
+            try:
+                st.image(img_path, use_container_width=True)
+                st.markdown(f"<p style='margin-top:10px;'>רגע מתוק #{num}</p>", unsafe_allow_html=True)
+                
+            except:
+                st.write(f"מחכה לתמונה הבאה... ({num})")            
+            # סגירת הדיב
+            st.markdown('</div>', unsafe_allow_html=True)
+            time.sleep(4)
+            
+    if st.button("סיבוב נוסף?"):
+        random.shuffle(st.session_state.photo_order)
         st.rerun()
 
 # --- דף 4: הפתעה חסויה ---
