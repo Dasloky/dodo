@@ -21,7 +21,7 @@ def rain_hearts():
                 heart.style.top = "-5vh";
                 heart.style.fontSize = (Math.random() * 20 + 10) + "px";
                 heart.style.opacity = Math.random();
-                heart.style.transform = `rotate(${Math.random() * 360}deg)`;
+                heart.style.transform = rotate(${Math.random() * 360}deg);
                 heart.style.transition = "top 3s linear, opacity 3s";
                 
                 document.getElementById("hearts-container").appendChild(heart);
