@@ -12,9 +12,9 @@ if 'clicks' not in st.session_state:
 if 'current_reason' not in st.session_state:
     st.session_state.current_reason = None
 if 'last_page' not in st.session_state:
-    st.session_state.last_page = "קודם כל"
+    st.session_state.last_page = "הפינה של עידודו ❤️"
 
-# --- CSS עם אנימציית לבבות מובנית ---
+# --- CSS עם אנימציית לבבות ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -56,7 +56,6 @@ html, body, .main {
     margin: 0;
 }
 
-/* אנימציית לבבות נופלים */
 @keyframes hearts-fall {
     0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
     100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
@@ -71,17 +70,9 @@ html, body, .main {
     z-index: 9999;
     animation: hearts-fall 3s linear forwards;
 }
-
-@media (max-width: 768px) {
-    [data-testid="column"] {
-        width: 100% !important;
-        flex: 1 1 100% !important;
-    }
-}
 </style>
 """, unsafe_allow_html=True)
 
-# פונקציה ליצירת הלבבות ויזואלית
 def trigger_hearts():
     heart_html = ""
     for i in range(20):
@@ -94,28 +85,27 @@ def trigger_hearts():
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
-# --- ניווט עליון ---
+# --- ניווט עליון (2 עמודים בלבד) ---
 st.write("### היי עידודו 👋")
 page = st.selectbox(
     "לאן נטייל?",
-    ["קודם כל", "סיבות לחייך", "קיר זיכרונות", "הפתעה חסויה 🔒"],
+    ["הפינה של עידודו ❤️", "קיר זיכרונות 📸"],
     label_visibility="visible"
 )
 
-# --- מנגנון איפוס במעבר דפים ---
+# איפוס במעבר בין הדפים
 if page != st.session_state.last_page:
-    st.session_state.clicks = 0  # איפוס לחיצות בחידה
-    st.session_state.current_reason = None  # איפוס המשפט בדף הסיבות
     st.session_state.last_page = page
     st.rerun()
 
 st.divider()
 
-# --- דף 1: קודם כל ---
-if page == "קודם כל":
+# --- עמוד 1: הפינה המאוחדת (1, 2, 4) ---
+if page == "הפינה של עידודו ❤️":
     st.title("הפינה שלנו ❤️")
     st.balloons()
     
+    # חלק 1: הסטטיסטיקות (עמוד 1 הישן)
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f'<div class="cute-card"><h3>{days_together}</h3><p>ימים שאנחנו ביחד</p></div>', unsafe_allow_html=True)
@@ -125,12 +115,9 @@ if page == "קודם כל":
         st.markdown('<div class="cute-card"><h3>∞</h3><p>כמות המחשבות שלי עליך</p></div>', unsafe_allow_html=True)
     
     st.write("---")
-    st.write("כיף שאתה כאן. האתר הזה הוא רק בשבילך.")
-
-# --- דף 2: סיבות לחייך ---
-elif page == "סיבות לחייך":
-    st.title("למה אתה העידודו שלי? ❤️")
     
+    # חלק 2: סיבות לחייך (עמוד 2 הישן)
+    st.subheader("למה אתה העידודו שלי? ✨")
     reasons = [
         "בגלל החיוך שגורם לי לשכוח מהכל",
         "בגלל שאתה תמיד יודע מה להגיד כשקשה",
@@ -141,19 +128,45 @@ elif page == "סיבות לחייך":
         "בגלל שאתה החבר הכי טוב שיכולתי לבקש"
     ]
     
-    st.write("תלחץ על הכפתור כדי לקבל קצת אהבה:")
     if st.button("לחץ כאן למשהו קטן וטוב ✨"):
         st.session_state.current_reason = random.choice(reasons)
         trigger_hearts()
     
     if st.session_state.current_reason:
         st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
+
+    st.write("---")
+
+    # חלק 3: הכספת והמכתב (עמוד 4 הישן)
+    st.subheader("כספת הלב 🔒")
+    target_clicks = 2
+    
+    if st.session_state.clicks < target_clicks:
+        st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
+        progress = st.session_state.clicks / target_clicks
+        st.progress(progress)
+        
+        if st.button("שלח אהבה ❤️"):
+            st.session_state.clicks += 1
+            st.rerun()
     else:
-        st.info("מחכה ללחיצה שלך...")
+        st.success("הכספת נפתחה! ❤️")
+        st.markdown("""
+        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px dashed #f08080; color: #432818; line-height: 1.6; text-align: center;">
+        <b>עידודו שלי,</b><br><br>
+        אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
+        תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
+        אני אוהבת אותך המון,<br>
+        <b>נאנה</b>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("לנעול מחדש? 🔐"):
+            st.session_state.clicks = 0
+            st.rerun()
 
-# --- דף 3: קיר זיכרונות ---
-
-elif page == "קיר זיכרונות":
+# --- עמוד 2: קיר זיכרונות (עמוד 3 הישן - ללא שינוי) ---
+elif page == "קיר זיכרונות 📸":
     st.title("הזיכרונות שלנו 📸")
     
     TOTAL_PHOTOS = 27  
@@ -166,57 +179,15 @@ elif page == "קיר זיכרונות":
         
     for num in st.session_state.photo_order:
         img_path = f"Image_{num}.jpg"
-        
         with placeholder.container():         
-            
-            # הצגת התמונה - היא תיכנס אוטומטית לתוך הדיב שמעליה
             try:
                 st.image(img_path, use_container_width=True)
-                st.markdown(f"<p style='margin-top:10px;'>רגע מתוק #{num}</p>", unsafe_allow_html=True)
-                
+                st.markdown(f"<p style='text-align:center; margin-top:10px;'>רגע מתוק #{num}</p>", unsafe_allow_html=True)
             except:
                 st.write(f"מחכה לתמונה הבאה... ({num})")            
-            # סגירת הדיב
-            st.markdown('</div>', unsafe_allow_html=True)
+            
             time.sleep(4)
             
     if st.button("סיבוב נוסף?"):
         random.shuffle(st.session_state.photo_order)
         st.rerun()
-
-# --- דף 4: הפתעה חסויה ---
-elif page == "הפתעה חסויה 🔒":
-    st.title("כספת הלב 🔒")
-    
-    target_clicks = 2
-    
-    if st.session_state.clicks < target_clicks:
-        st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
-        
-        progress = st.session_state.clicks / target_clicks
-        st.progress(progress)
-        st.write(f"מדד אהבה: {int(progress * 100)}%")
-        
-        if st.button("שלח אהבה ❤️"):
-            st.session_state.clicks += 1
-            st.rerun()
-            
-    else:
-        st.success("הכספת נפתחה! ❤️")
-        trigger_hearts()
-        
-        st.divider()
-        st.subheader("המכתב שלי אליך")
-        st.markdown("""
-        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px dashed #f08080; color: #432818; line-height: 1.6;">
-        עידודו שלי,<br><br>
-        אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
-        תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
-        אני אוהבת אותך המון,<br>
-        נאנה
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if st.button("לנעול מחדש? 🔐"):
-            st.session_state.clicks = 0
-            st.rerun()
