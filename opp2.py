@@ -145,7 +145,6 @@ elif page == "סיבות לחייך":
     if st.button("לחץ כאן למשהו קטן וטוב ✨"):
         st.session_state.current_reason = random.choice(reasons)
         trigger_hearts()
-        st.balloons()
     
     if st.session_state.current_reason:
         st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
