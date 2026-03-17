@@ -179,7 +179,7 @@ elif page == "קיר זיכרונות":
 elif page == "הפתעה חסויה 🔒":
     st.title("כספת הלב 🔒")
     
-    target_clicks = 100
+    target_clicks = 2
     
     if st.session_state.clicks < target_clicks:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
@@ -195,7 +195,6 @@ elif page == "הפתעה חסויה 🔒":
     else:
         st.success("הכספת נפתחה! ❤️")
         trigger_hearts()
-        st.balloons()
         
         st.divider()
         st.subheader("המכתב שלי אליך")
