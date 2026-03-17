@@ -114,6 +114,7 @@ st.divider()
 # --- דף 1: קודם כל ---
 if page == "קודם כל":
     st.title("הפינה שלנו ❤️")
+    st.balloons()
     
     col1, col2, col3 = st.columns(3)
     with col1:
