@@ -21,42 +21,58 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
 
+/* הגדרות צבעים וגופנים */
 html, body, [data-testid="stAppViewContainer"] {
     direction: rtl;
     text-align: right;
     font-family: 'Assistant', sans-serif;
-    background-color: #F8F9FA;
+    background-color: #F8F9FA; /* רקע אפור בהיר מאוד ונקי */
     color: #333333;
 }
 
-/* יישור כותרות וטקסט לימין */
-h1, h2, h3, h4, h5, h6, p, label {
+/* הצמדת כל הכותרות לימין */
+h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
     text-align: right !important;
     direction: rtl !important;
 }
 
+/* עיצוב כרטיסיות הנתונים */
 .cute-card {
     background: white;
     padding: 20px;
     border-radius: 15px;
     border: 1px solid #E0E0E0;
+    text-align: center; /* בתוך הכרטיס המספרים נשארים במרכז */
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     margin-bottom: 15px;
 }
 
 .cute-card h3 {
-    color: #D63384 !important;
+    color: #D63384 !important; /* צבע ורוד-דובדבן עדין למספרים */
     font-size: 32px;
-    text-align: center !important;
     margin: 0;
-}
-
-.cute-card p {
     text-align: center !important;
 }
 
-/* כפתורים לימין */
+/* אנימציית לבבות */
+.heart-particle {
+    position: fixed;
+    color: #D63384;
+    font-size: 24px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 9999;
+    animation: hearts-fall 3s linear forwards;
+}
+
+@keyframes hearts-fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
+    100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
+}
+
+/* תיקון ליישור כפתורים ופרוגרס בר */
 .stButton>button {
+    width: auto;
     display: block;
     margin-right: 0;
     margin-left: auto;
