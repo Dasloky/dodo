@@ -97,13 +97,13 @@ def trigger_hearts():
     st.markdown(heart_html, unsafe_allow_html=True)
 
 # לוגיקת תאריכים
-START_DATE = date(2025, 12, 1) 
+START_DATE = date(2026, 1, 1) 
 days_together = (date.today() - START_DATE).days
 
 # --- תפריט ניווט ---
-st.write("### היי עידודו 👋")
+st.write("### אתר ממש ממש מגניב")
 # קיר זיכרונות הוא האופציה הראשונה (דף הבית)
-current_page = st.selectbox("לאן נטייל?", ["קיר זיכרונות 📸", "הפינה של עידודו ❤️"], key="nav_bar")
+current_page = st.selectbox("לאן נטייל?", ["קצת עידו", "יש לי להגיד לך משהו"], key="nav_bar")
 
 # איפוס מוחלט במעבר דפים
 if current_page != st.session_state.last_page:
@@ -118,8 +118,8 @@ st.divider()
 # ==========================================
 # עמוד 1: קיר זיכרונות (אוטומטי)
 # ==========================================
-if current_page == "קיר זיכרונות 📸":
-    st.title("הזיכרונות שלנו 📸")
+if current_page == "קצת עידו":
+    st.title("📸")
     
     TOTAL_PHOTOS = 27
     photo_list = list(range(1, TOTAL_PHOTOS + 1))
@@ -128,22 +128,21 @@ if current_page == "קיר זיכרונות 📸":
     placeholder = st.empty()
     
     for num in photo_list:
-        # בדיקה אם המשתמש עבר דף בזמן שהלולאה רצה
-        if st.session_state.nav_bar != "קיר זיכרונות 📸":
+
+        if st.session_state.nav_bar != "קצת עידו":
             break
             
         with placeholder.container():
             img_path = f"Image_{num}.jpg"
             try:
                 st.image(img_path, use_container_width=True)
-                st.markdown(f"<p style='text-align:right; font-size:18px; color:#f08080;'>רגע מתוק #{num}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='text-align:right; font-size:18px; color:#f08080;'>#{num}</p>", unsafe_allow_html=True)
             except:
                 st.info(f"טוען רגע #{num}...")
         
-        # המתנה של 4 שניות עם בדיקה כל 0.1 שניות למעבר דף חלק
         for _ in range(40):
             time.sleep(0.1)
-            if st.session_state.nav_bar != "קיר זיכרונות 📸":
+            if st.session_state.nav_bar != "קצת עידו":
                 st.rerun()
     
     st.rerun()
