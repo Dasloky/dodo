@@ -189,7 +189,7 @@ else:
     st.divider()
 
     st.subheader("כספת הלב 🔒")
-    target_clicks = 2
+    target_clicks = 50
     
     if st.session_state.clicks < target_clicks:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
