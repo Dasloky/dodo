@@ -50,6 +50,7 @@ h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
 .cute-card h3 {
     color: #D63384 !important; /* צבע ורוד-דובדבן עדין למספרים */
     font-size: 32px;
+    text-align: center;
     margin: 0;
     text-align: center !important;
 }
@@ -88,7 +89,7 @@ def trigger_hearts():
     st.markdown(heart_html, unsafe_allow_html=True)
 
 # לוגיקת תאריכים
-START_DATE = date(2025, 12, 1) 
+START_DATE = date(2026, 1, 1) 
 days_together = (date.today() - START_DATE).days
 
 # --- תפריט ניווט ---
