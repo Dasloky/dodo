@@ -156,7 +156,7 @@ elif page == "סיבות לחייך":
 elif page == "קיר זיכרונות":
     st.title("הזיכרונות שלנו 📸")
     
-    TOTAL_PHOTOS = 23  
+    TOTAL_PHOTOS = 27  
     
     placeholder = st.empty()
     
