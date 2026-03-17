@@ -11,8 +11,9 @@ if 'clicks' not in st.session_state:
     st.session_state.clicks = 0
 if 'current_reason' not in st.session_state:
     st.session_state.current_reason = None
+# שינוי עמוד ברירת המחדל לקיר זיכרונות
 if 'last_page' not in st.session_state:
-    st.session_state.last_page = "הפינה של עידודו ❤️"
+    st.session_state.last_page = "קיר זיכרונות 📸"
 if 'balloons_fired' not in st.session_state:
     st.session_state.balloons_fired = False
 
@@ -26,12 +27,12 @@ html, body, [data-testid="stAppViewContainer"] {
     direction: rtl;
     text-align: right;
     font-family: 'Assistant', sans-serif;
-    background-color: #F8F9FA; /* רקע אפור בהיר מאוד ונקי */
+    background-color: #F8F9FA; 
     color: #333333;
 }
 
 /* הצמדת כל הכותרות לימין */
-h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
+h1, h2, h3, h4, h5, h6, p, label, .stMarkdown div {
     text-align: right !important;
     direction: rtl !important;
 }
@@ -42,17 +43,19 @@ h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
     padding: 20px;
     border-radius: 15px;
     border: 1px solid #E0E0E0;
-    text-align: center; /* בתוך הכרטיס המספרים נשארים במרכז */
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     margin-bottom: 15px;
 }
 
 .cute-card h3 {
-    color: #D63384 !important; /* צבע ורוד-דובדבן עדין למספרים */
+    color: #D63384 !important;
     font-size: 32px;
-    text-align: center;
     margin: 0;
-    text-align: center !important;
+    text-align: center !important; /* מספרים נשארים במרכז הכרטיס */
+}
+
+.cute-card p {
+    text-align: center !important; /* טקסט תחתון בכרטיס נשאר במרכז */
 }
 
 /* אנימציית לבבות */
@@ -71,9 +74,8 @@ h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
     100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
 }
 
-/* תיקון ליישור כפתורים ופרוגרס בר */
+/* יישור כפתורים לימין */
 .stButton>button {
-    width: auto;
     display: block;
     margin-right: 0;
     margin-left: auto;
@@ -92,11 +94,11 @@ def trigger_hearts():
 START_DATE = date(2026, 1, 1) 
 days_together = (date.today() - START_DATE).days
 
-# --- תפריט ניווט ---
+# --- תפריט ניווט (קיר זיכרונות מופיע ראשון) ---
 st.write("### היי עידודו 👋")
-current_page = st.selectbox("לאן נטייל?", ["הפינה של עידודו ❤️", "קיר זיכרונות 📸"], key="nav_bar")
+current_page = st.selectbox("לאן נטייל?", ["קיר זיכרונות 📸", "הפינה של עידודו ❤️"], key="nav_bar")
 
-# --- איפוס במעבר דפים ---
+# --- מנגנון האיפוס במעבר דפים ---
 if current_page != st.session_state.last_page:
     st.session_state.clicks = 0
     st.session_state.current_reason = None
@@ -107,9 +109,46 @@ if current_page != st.session_state.last_page:
 st.divider()
 
 # ==========================================
-# עמוד 1: הפינה של עידודו
+# עמוד 1: קיר זיכרונות (עכשיו העמוד הראשי)
 # ==========================================
-if current_page == "הפינה של עידודו ❤️":
+if current_page == "קיר זיכרונות 📸":
+    st.title("הזיכרונות שלנו 📸")
+    
+    TOTAL_PHOTOS = 27
+    if 'photo_order' not in st.session_state:
+        st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
+        random.shuffle(st.session_state.photo_order)
+    
+    placeholder = st.empty()
+    
+    for num in st.session_state.photo_order:
+        # עצירה בטוחה אם מעבירים דף
+        if st.session_state.nav_bar != "קיר זיכרונות 📸":
+            break
+            
+        with placeholder.container():
+            img_path = f"Image_{num}.jpg"
+            try:
+                st.image(img_path, use_container_width=True)
+                st.markdown(f"<h4 style='text-align:right; color:#D63384;'>רגע מתוק #{num}</h4>", unsafe_allow_html=True)
+            except:
+                st.info("טוען רגע יפה...")
+        
+        # המתנה של 4 שניות עם בדיקת יציאה מהדף כל שנייה
+        for _ in range(4):
+            time.sleep(1)
+            if st.session_bar != "קיר זיכרונות 📸": # בדיקה כפולה למניעת תקיעה
+                st.rerun()
+    
+    # ערבוב מחדש בסיום הלולאה
+    random.shuffle(st.session_state.photo_order)
+    st.rerun()
+
+# ==========================================
+# עמוד 2: הפינה של עידודו
+# ==========================================
+elif current_page == "הפינה של עידודו ❤️":
+    # בלונים קופצים פעם אחת בכניסה לדף זה
     if not st.session_state.balloons_fired:
         st.balloons()
         st.session_state.balloons_fired = True
@@ -140,7 +179,7 @@ if current_page == "הפינה של עידודו ❤️":
         trigger_hearts()
     
     if st.session_state.current_reason:
-        st.markdown(f'<div class="cute-card"><p style="font-size:20px; margin:0;">{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="cute-card"><p style="font-size:20px; margin:0; text-align:right;">{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
 
     st.divider()
 
@@ -150,53 +189,20 @@ if current_page == "הפינה של עידודו ❤️":
     if st.session_state.clicks < target_clicks:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
         st.progress(st.session_state.clicks / target_clicks)
-        
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
     else:
         st.success("הכספת נפתחה! ❤️")
         st.markdown("""
-        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center; line-height: 1.6;">
-            <b>עידודו שלי,</b><br><br>
+        <div style="background: white; padding: 25px; border-radius: 15px; border: 1px solid #D63384; text-align: right; line-height: 1.6;">
+            <b style="color:#D63384;">עידודו שלי,</b><br><br>
             אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
             תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
             אני אוהבת אותך המון,<br>
             <b>נאנה</b>
         </div>
         """, unsafe_allow_html=True)
-        
-        st.write("")
-        if st.button("לנעול מחדש? 🔐"):
+        if st.button("לנעול מחדש 🔐"):
             st.session_state.clicks = 0
             st.rerun()
-
-# ==========================================
-# עמוד 2: קיר זיכרונות
-# ==========================================
-elif current_page == "קיר זיכרונות 📸":
-    st.title("הזיכרונות שלנו 📸")
-    
-    TOTAL_PHOTOS = 27
-    photo_order = list(range(1, TOTAL_PHOTOS + 1))
-    random.shuffle(photo_order)
-    
-    placeholder = st.empty()
-    
-    for num in photo_order:
-        if st.session_state.nav_bar != "קיר זיכרונות 📸":
-            break
-            
-        with placeholder.container():
-            img_path = f"Image_{num}.jpg"
-            try:
-                st.image(img_path, use_container_width=True)
-                st.markdown(f"<h4 style='text-align:right; color:#D63384;'>רגע מתוק #{num}</h4>", unsafe_allow_html=True)
-            except:
-                st.info("טוען רגעים יפים...")
-        
-        for _ in range(4):
-            time.sleep(1)
-            if st.session_state.nav_bar != "קיר זיכרונות 📸":
-                st.rerun()
-    st.rerun()
