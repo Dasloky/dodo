@@ -69,11 +69,15 @@ html, body, .main {
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
+# ניהול State עבור הדף החסוי
+if 'clicks' not in st.session_state:
+    st.session_state.clicks = 0
+
 # --- ניווט עליון ---
 st.write("### היי עידודו 👋")
 page = st.selectbox(
     "לאן נטייל?",
-    ["קודם כל", "רגעים קטנים", "קיר זיכרונות", "הפתעה חסויה 🔒"],
+    ["קודם כל", "סיבות לחייך", "קיר זיכרונות", "הפתעה חסויה 🔒"],
     label_visibility="visible"
 )
 st.divider()
@@ -93,17 +97,27 @@ if page == "קודם כל":
     st.write("---")
     st.write("כיף שאתה כאן. האתר הזה הוא רק בשבילך.")
 
-# --- דף 2: רגעים קטנים ---
-elif page == "רגעים קטנים":
-    st.title("עמוד נורמלי לגמרי")
+# --- דף 2: סיבות לחייך (השינוי החדש) ---
+elif page == "סיבות לחייך":
+    st.title("למה אתה העידודו שלי? ❤️")
     
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown('<div class="cute-card"><h3>∞</h3><p>צחוקים משותפים</p></div>', unsafe_allow_html=True)
-    with c2:
-        st.markdown('<div class="cute-card"><h3>2,920</h3><p>בקרים שקמנו חברים</p></div>', unsafe_allow_html=True)
-    with c3:
-        st.markdown('<div class="cute-card"><h3>1</h3><p>לב אחד (שלי)</p></div>', unsafe_allow_html=True)
+    reasons = [
+        "בגלל החיוך שגורם לי לשכוח מהכל",
+        "בגלל שאתה תמיד יודע מה להגיד כשקשה",
+        "בגלל הדרך שבה אתה מצחיק אותי עד דמעות",
+        "בגלל 8 שנים של חברות שהיא הבית שלי",
+        "בגלל שאתה פשוט... אתה.",
+        "בגלל המבט הזה ששמור רק לי",
+        "בגלל שאתה החבר הכי טוב שיכולתי לבקש"
+    ]
+    
+    st.write("תלחץ על הכפתור כדי לקבל קצת אהבה:")
+    if st.button("לחץ כאן למשהו קטן וטוב ✨"):
+        reason = random.choice(reasons)
+        st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{reason}</p></div>', unsafe_allow__html=True)
+        st.balloons()
+    else:
+        st.info("מחכה ללחיצה שלך...")
 
 # --- דף 3: קיר זיכרונות ---
 elif page == "קיר זיכרונות":
@@ -111,56 +125,62 @@ elif page == "קיר זיכרונות":
     
     TOTAL_PHOTOS = 23  
     
-    placeholder = st.empty()
-    
     if 'photo_order' not in st.session_state:
         st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
         random.shuffle(st.session_state.photo_order)
 
-    for num in st.session_state.photo_order:
-        img_path = f"Image_{num}.jpg"
-        
-        with placeholder.container():
-            
-            # הצגת התמונה - היא תיכנס אוטומטית לתוך הדיב שמעליה
-            try:
-                st.image(img_path, use_container_width=True)
-                st.markdown(f"<p style='margin-top:10px;'>רגע מתוק #{num}</p>", unsafe_allow_html=True)
-            except:
-                st.write(f"מחכה לתמונה הבאה... ({num})")
-            
-            # סגירת הדיב
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            time.sleep(4)
+    placeholder = st.empty()
     
-    if st.button("סיבוב נוסף?"):
-        random.shuffle(st.session_state.photo_order)
+    # הצגת תמונה רנדומלית בכל פעם שנכנסים או לוחצים על הכפתור
+    current_photo = random.choice(st.session_state.photo_order)
+    img_path = f"Image_{current_photo}.jpg"
+    
+    with placeholder.container():
+        try:
+            st.image(img_path, use_container_width=True)
+            st.markdown(f"<p style='text-align:center;'>רגע מתוק #{current_photo}</p>", unsafe_allow_html=True)
+        except:
+            st.write(f"כאן תופיע תמונה מספר {current_photo} ברגע שתעלי אותה לתיקייה!")
+    
+    if st.button("תמונה אחרת? 🔄"):
         st.rerun()
 
-# --- דף 4: הפתעה חסויה ---
+# --- דף 4: הפתעה חסויה (השינוי עם הלחיצות) ---
 elif page == "הפתעה חסויה 🔒":
-    st.title("אזור סודי 🔒")
-    st.write("סדר את התחנות שלנו לפי הזמן כדי לפתוח את המכתב:")
-
-    s1 = st.selectbox("תחנה ראשונה:", ["", "הווידוי במסיבת הגיוס", "היכרות בחטיבה", "חברים טובים במגמה"])
-    s2 = st.selectbox("תחנה שנייה:", ["", "הווידוי במסיבת הגיוס", "היכרות בחטיבה", "חברים טובים במגמה"])
-    s3 = st.selectbox("תחנה שלישית:", ["", "הווידוי במסיבת הגיוס", "היכרות בחטיבה", "חברים טובים במגמה"])
-
-    if s1 == "היכרות בחטיבה" and s2 == "חברים טובים במגמה" and s3 == "הווידוי במסיבת הגיוס":
-        st.success("זה בדיוק הסדר הנכון! ❤️")
+    st.title("כספת הלב 🔒")
+    
+    target_clicks = 5 # מספר הלחיצות הנדרש
+    
+    if st.session_state.clicks < target_clicks:
+        st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
+        
+        # חישוב התקדמות
+        progress = st.session_state.clicks / target_clicks
+        st.progress(progress)
+        st.write(f"מדד אהבה: {st.session_state.clicks * 20}%")
+        
+        if st.button("שלח אהבה ❤️"):
+            st.session_state.clicks += 1
+            st.rerun()
+            
+    else:
+        # פתיחת הכספת
+        st.success("הכספת נפתחה! ❤️")
         st.balloons()
         
         st.divider()
         st.subheader("המכתב שלי אליך")
         st.markdown("""
-        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px dashed #f08080; color: #432818;">
+        <div style="background: white; padding: 20px; border-radius: 15px; border: 1px dashed #f08080; color: #432818; line-height: 1.6;">
         עידודו שלי,<br><br>
         אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
+        תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
         אני אוהבת אותך המון,<br>
         נאנה
         </div>
         """, unsafe_allow_html=True)
         st.snow()
-    elif s1 != "" and s2 != "" and s3 != "":
-        st.error("משהו פה התבלבל בסדר... תנסה שוב!")
+        
+        if st.button("לנעול מחדש? 🔐"):
+            st.session_state.clicks = 0
+            st.rerun()
