@@ -12,11 +12,14 @@ if 'clicks' not in st.session_state:
 if 'current_reason' not in st.session_state:
     st.session_state.current_reason = None
 if 'last_page' not in st.session_state:
-    st.session_state.last_page = "קיר זיכרונות 📸"
+    st.session_state.last_page = "קצת עידו"
 if 'balloons_fired' not in st.session_state:
     st.session_state.balloons_fired = False
 
-# --- CSS מעוצב (מהקוד שלך) עם יישור לימין ---
+# הגדרת יעד הלחיצות (כדי להשתמש בו גם בכרטיסיות וגם בכספת)
+TARGET_CLICKS = 50
+
+# --- CSS מעוצב עם יישור לימין ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -35,7 +38,6 @@ html, body, [data-testid="stAppViewContainer"] {
     color: var(--warm-text);
 }
 
-/* יישור כותרות וטקסט לימין */
 h1, h2, h3, h4, h5, h6, p, label, .stMarkdown div {
     text-align: right !important;
     direction: rtl !important;
@@ -64,14 +66,12 @@ h1, h2, h3, h4, h5, h6, p, label, .stMarkdown div {
     text-align: center !important;
 }
 
-/* כפתורים לימין */
 .stButton>button {
     display: block;
     margin-right: 0;
     margin-left: auto;
 }
 
-/* אנימציית לבבות */
 @keyframes hearts-fall {
     0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
     100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
@@ -102,7 +102,6 @@ days_together = (date.today() - START_DATE).days
 
 # --- תפריט ניווט ---
 st.write("### אתר ממש ממש מגניב")
-# קיר זיכרונות הוא האופציה הראשונה (דף הבית)
 current_page = st.selectbox("לאן נטייל?", ["קצת עידו", "יש לי להגיד לך משהו"], key="nav_bar")
 
 # איפוס מוחלט במעבר דפים
@@ -116,7 +115,7 @@ if current_page != st.session_state.last_page:
 st.divider()
 
 # ==========================================
-# עמוד 1: קיר זיכרונות (אוטומטי)
+# עמוד 1: קצת עידו (גלריה)
 # ==========================================
 if current_page == "קצת עידו":
     st.title("📸")
@@ -128,7 +127,6 @@ if current_page == "קצת עידו":
     placeholder = st.empty()
     
     for num in photo_list:
-
         if st.session_state.nav_bar != "קצת עידו":
             break
             
@@ -151,18 +149,21 @@ if current_page == "קצת עידו":
 # עמוד 2: הפינה של עידודו
 # ==========================================
 else:
-    # בלונים רק פעם אחת בכניסה לדף
     if not st.session_state.balloons_fired:
         st.balloons()
         st.session_state.balloons_fired = True
         
-    st.title("הפינה שלנו ❤️")
+    st.title("כל מיני דברים חמודים")
     
+    # לוגיקה לשינוי מספר ההודעות החצופות
+    insult_count = 22 if st.session_state.clicks >= TARGET_CLICKS else 21
+
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f'<div class="cute-card"><h3>{max(0, days_together)}</h3><p>ימים שאנחנו ביחד</p></div>', unsafe_allow_html=True)
     with col2:
-        st.markdown('<div class="cute-card"><h3>8</h3><p>שנים של חברות אמת</p></div>', unsafe_allow_html=True)
+        # המספר משתנה ל-22 כשהכספת נפתחת
+        st.markdown(f'<div class="cute-card"><h3>{insult_count}</h3><p>כמות הודעות חצופות וארוכות</p></div>', unsafe_allow_html=True)
     with col3:
         st.markdown('<div class="cute-card"><h3>∞</h3><p>כמות המחשבות שלי עליך</p></div>', unsafe_allow_html=True)
     
@@ -188,11 +189,10 @@ else:
     st.divider()
 
     st.subheader("כספת הלב 🔒")
-    target_clicks = 50
     
-    if st.session_state.clicks < target_clicks:
+    if st.session_state.clicks < TARGET_CLICKS:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
-        st.progress(st.session_state.clicks / target_clicks)
+        st.progress(st.session_state.clicks / TARGET_CLICKS)
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
