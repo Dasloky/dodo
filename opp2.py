@@ -69,9 +69,11 @@ html, body, .main {
 START_DATE = date(2026, 1, 1)
 days_together = (date.today() - START_DATE).days
 
-# ניהול State עבור הדף החסוי
+# ניהול State עבור הדף החסוי והסיבות
 if 'clicks' not in st.session_state:
     st.session_state.clicks = 0
+if 'current_reason' not in st.session_state:
+    st.session_state.current_reason = None
 
 # --- ניווט עליון ---
 st.write("### היי עידודו 👋")
@@ -97,7 +99,7 @@ if page == "קודם כל":
     st.write("---")
     st.write("כיף שאתה כאן. האתר הזה הוא רק בשבילך.")
 
-# --- דף 2: סיבות לחייך (השינוי החדש) ---
+# --- דף 2: סיבות לחייך ---
 elif page == "סיבות לחייך":
     st.title("למה אתה העידודו שלי? ❤️")
     
@@ -113,9 +115,11 @@ elif page == "סיבות לחייך":
     
     st.write("תלחץ על הכפתור כדי לקבל קצת אהבה:")
     if st.button("לחץ כאן למשהו קטן וטוב ✨"):
-        reason = random.choice(reasons)
-        st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{reason}</p></div>', unsafe_allow__html=True)
+        st.session_state.current_reason = random.choice(reasons)
         st.balloons()
+    
+    if st.session_state.current_reason:
+        st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
     else:
         st.info("מחכה ללחיצה שלך...")
 
@@ -131,7 +135,7 @@ elif page == "קיר זיכרונות":
 
     placeholder = st.empty()
     
-    # הצגת תמונה רנדומלית בכל פעם שנכנסים או לוחצים על הכפתור
+    # הצגת תמונה רנדומלית
     current_photo = random.choice(st.session_state.photo_order)
     img_path = f"Image_{current_photo}.jpg"
     
@@ -145,26 +149,24 @@ elif page == "קיר זיכרונות":
     if st.button("תמונה אחרת? 🔄"):
         st.rerun()
 
-# --- דף 4: הפתעה חסויה (השינוי עם הלחיצות) ---
+# --- דף 4: הפתעה חסויה ---
 elif page == "הפתעה חסויה 🔒":
     st.title("כספת הלב 🔒")
     
-    target_clicks = 5 # מספר הלחיצות הנדרש
+    target_clicks = 5 
     
     if st.session_state.clicks < target_clicks:
         st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
         
-        # חישוב התקדמות
         progress = st.session_state.clicks / target_clicks
         st.progress(progress)
-        st.write(f"מדד אהבה: {st.session_state.clicks * 20}%")
+        st.write(f"מדד אהבה: {int(progress * 100)}%")
         
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
             
     else:
-        # פתיחת הכספת
         st.success("הכספת נפתחה! ❤️")
         st.balloons()
         
