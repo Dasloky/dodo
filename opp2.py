@@ -208,7 +208,6 @@ elif page == "הפתעה חסויה 🔒":
         נאנה
         </div>
         """, unsafe_allow_html=True)
-        st.snow()
         
         if st.button("לנעול מחדש? 🔐"):
             st.session_state.clicks = 0
