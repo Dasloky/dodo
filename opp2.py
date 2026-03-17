@@ -6,15 +6,17 @@ import random
 # הגדרות דף
 st.set_page_config(page_title="עבור עידודו ❤️", page_icon="❤️", layout="wide")
 
-# ניהול State
+# --- ניהול State (מצב האפליקציה) ---
 if 'clicks' not in st.session_state:
     st.session_state.clicks = 0
 if 'current_reason' not in st.session_state:
     st.session_state.current_reason = None
 if 'last_page' not in st.session_state:
     st.session_state.last_page = "הפינה של עידודו ❤️"
+if 'balloons_fired' not in st.session_state:
+    st.session_state.balloons_fired = False
 
-# --- CSS נקי ובטוח ---
+# --- CSS מעוצב ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -49,17 +51,6 @@ html, body, [data-testid="stAppViewContainer"] {
     margin: 0;
 }
 
-.cute-card p {
-    font-size: 18px;
-    margin: 10px 0 0 0;
-}
-
-/* אנימציית לבבות */
-@keyframes hearts-fall {
-    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
-    100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
-}
-
 .heart-particle {
     position: fixed;
     color: #ffb5a7;
@@ -68,6 +59,11 @@ html, body, [data-testid="stAppViewContainer"] {
     pointer-events: none;
     z-index: 9999;
     animation: hearts-fall 3s linear forwards;
+}
+
+@keyframes hearts-fall {
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
+    100% { top: 100%; transform: translateX(20px) rotate(360deg); opacity: 0; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -80,24 +76,32 @@ def trigger_hearts():
     st.markdown(heart_html, unsafe_allow_html=True)
 
 # לוגיקת תאריכים
-START_DATE = date(2026, 1, 1) # תשני לתאריך הנכון שלכם
+START_DATE = date(2025, 12, 1) # תשני לתאריך המקורי שלכם
 days_together = (date.today() - START_DATE).days
 
 # --- תפריט ניווט ---
 st.write("### היי עידודו 👋")
-page = st.selectbox("לאן נטייל?", ["הפינה של עידודו ❤️", "קיר זיכרונות 📸"])
+current_page = st.selectbox("לאן נטייל?", ["הפינה של עידודו ❤️", "קיר זיכרונות 📸"], key="nav_bar")
 
-# מנגנון ניקוי במעבר דף
-if page != st.session_state.last_page:
-    st.session_state.last_page = page
+# --- מנגנון האיפוס המלא במעבר דפים ---
+if current_page != st.session_state.last_page:
+    st.session_state.clicks = 0
+    st.session_state.current_reason = None
+    st.session_state.balloons_fired = False  # מאפשר לבלונים לקרות שוב כשחוזרים
+    st.session_state.last_page = current_page
     st.rerun()
 
 st.divider()
 
 # ==========================================
-# עמוד 1: הפינה של עידודו 
+# עמוד 1: הפינה של עידודו
 # ==========================================
-if page == "הפינה של עידודו ❤️":
+if current_page == "הפינה של עידודו ❤️":
+    # הפעלת בלונים רק פעם אחת בכניסה לדף
+    if not st.session_state.balloons_fired:
+        st.balloons()
+        st.session_state.balloons_fired = True
+        
     st.title("הפינה שלנו ❤️")
     
     col1, col2, col3 = st.columns(3)
@@ -116,9 +120,7 @@ if page == "הפינה של עידודו ❤️":
         "בגלל שאתה תמיד יודע מה להגיד כשקשה",
         "בגלל הדרך שבה אתה מצחיק אותי עד דמעות",
         "בגלל 8 שנים של חברות שהיא הבית שלי",
-        "בגלל שאתה פשוט... אתה.",
-        "בגלל המבט הזה ששמור רק לי",
-        "בגלל שאתה החבר הכי טוב שיכולתי לבקש"
+        "בגלל שאתה פשוט... אתה."
     ]
     
     if st.button("לחץ כאן למשהו קטן וטוב ✨"):
@@ -131,58 +133,52 @@ if page == "הפינה של עידודו ❤️":
     st.divider()
 
     st.subheader("כספת הלב 🔒")
-    target_clicks = 2
-    
-    if st.session_state.clicks < target_clicks:
-        st.write("כדי לפתוח את המכתב הסודי, צריך למלא את מדד האהבה.")
-        st.progress(st.session_state.clicks / target_clicks)
-        
+    if st.session_state.clicks < 2:
+        st.write("מלא את מדד האהבה:")
+        st.progress(st.session_state.clicks / 2)
         if st.button("שלח אהבה ❤️"):
             st.session_state.clicks += 1
             st.rerun()
     else:
         st.success("הכספת נפתחה! ❤️")
         st.markdown("""
-        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center; line-height: 1.6;">
-            <b>עידודו שלי,</b><br><br>
-            אחרי 8 שנים, אני פשוט רוצה להגיד תודה על מי שאתה.<br>
-            תודה שאתה תמיד שם, מצחיק, מקשיב ואוהב.<br><br>
-            אני אוהבת אותך המון,<br>
-            <b>נאנה</b>
+        <div style="background: white; padding: 25px; border-radius: 15px; border: 2px dashed #f08080; text-align: center;">
+            <p>עידודו שלי, תודה על 8 שנים מדהימות. אוהבת אותך המון, נאנה ❤️</p>
         </div>
         """, unsafe_allow_html=True)
-        
-        st.write("")
-        if st.button("לנעול מחדש? 🔐"):
+        if st.button("לנעול מחדש 🔐"):
             st.session_state.clicks = 0
             st.rerun()
 
 # ==========================================
-# עמוד 2: קיר זיכרונות (מתחלף אוטומטית)
+# עמוד 2: קיר זיכרונות (אוטומטי)
 # ==========================================
-elif page == "קיר זיכרונות 📸":
+elif current_page == "קיר זיכרונות 📸":
     st.title("הזיכרונות שלנו 📸")
-    st.write("פשוט שבו אחורה ותהנו מהרגעים... ✨")
     
     TOTAL_PHOTOS = 27
-    if 'photo_order' not in st.session_state:
-        st.session_state.photo_order = list(range(1, TOTAL_PHOTOS + 1))
-        random.shuffle(st.session_state.photo_order)
-        
-    # מיכל אחד ריק שמתעדכן מבלי "ללכלך" את שאר הדף
+    photo_order = list(range(1, TOTAL_PHOTOS + 1))
+    random.shuffle(photo_order)
+    
     placeholder = st.empty()
     
-    # לולאה שרצה אוטומטית על כל התמונות
-    while True:
-        for num in st.session_state.photo_order:
-            # כל סיבוב אנחנו דורסים את המיכל עם התמונה החדשה
-            with placeholder.container():
-                img_path = f"Image_{num}.jpg"
-                try:
-                    st.image(img_path, use_container_width=True)
-                    st.markdown(f"<h4 style='text-align:center; color:#f08080; margin-top:10px;'>רגע מתוק #{num}</h4>", unsafe_allow_html=True)
-                except:
-                    st.warning(f"מחכה לתמונה... (ודאי שהשם נכון: Image_{num}.jpg)")
+    for num in photo_order:
+        # בדיקה אם המשתמש ניסה לעבור דף בזמן הלולאה
+        if st.session_state.nav_bar != "קיר זיכרונות 📸":
+            break
             
-            # ממתין 4 שניות לפני התמונה הבאה
-            time.sleep(4)
+        with placeholder.container():
+            img_path = f"Image_{num}.jpg"
+            try:
+                st.image(img_path, use_container_width=True)
+                st.markdown(f"<h4 style='text-align:center; color:#f08080;'>רגע מתוק #{num}</h4>", unsafe_allow_html=True)
+            except:
+                st.info("טוען רגעים יפים...")
+        
+        # המתנה של 4 שניות עם בדיקה בכל שנייה אם לעצור
+        for _ in range(4):
+            time.sleep(1)
+            if st.session_state.nav_bar != "קיר זיכרונות 📸":
+                st.rerun()
+    
+    st.rerun()
