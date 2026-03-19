@@ -100,7 +100,7 @@ else:
     c3.markdown('<div class="cute-card"><h3>∞</h3><p>מחשבות עליך</p></div>', unsafe_allow_html=True)
     
     st.divider()
-    if st.button("לחץ כאן למשהו קטן וטוב ✨"):
+    if st.button("כדי שתדע את מקומך קצת יותר טוב ✨"):
         reasons = ["בגלל החיוך", "בגלל שאתה יודע מה להגיד", "בגלל 8 שנים של חברות", "בגלל שאתה פשוט אתה"]
         st.session_state.current_reason = random.choice(reasons)
         trigger_hearts()
@@ -109,15 +109,15 @@ else:
         st.markdown(f'<div class="cute-card"><h3>💖</h3><p>{st.session_state.current_reason}</p></div>', unsafe_allow_html=True)
 
     st.divider()
-    st.subheader("כספת הלב 🔒")
+    st.subheader("תשיג את ההודעה 🔒")
     
     if st.session_state.clicks < TARGET_CLICKS:
         st.progress(st.session_state.clicks / TARGET_CLICKS)
-        if st.button("שלח אהבה ❤️"):
+        if st.button("חיבוקי ❤️"):
             st.session_state.clicks += 1
             st.rerun()
     else:
-        st.success("הכספת נפתחה! ❤️")
+        st.success("טוב קבל אותה ❤️")
         trigger_hearts()
         
         # המכתב - שים לב לסגירה בסוף!
