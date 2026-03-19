@@ -18,7 +18,7 @@ if 'balloons_fired' not in st.session_state:
 
 TARGET_CLICKS = 2
 
-# --- CSS ---
+# --- CSS כללי ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap');
@@ -95,7 +95,7 @@ else:
 
     c1, c2, c3 = st.columns(3)
     c1.markdown(f'<div class="cute-card"><h3>{max(0, days_together)}</h3><p>ימים ביחד</p></div>', unsafe_allow_html=True)
-    c2.markdown(f'<div class="cute-card"><h3>{insult_count}</h3><p>כמות הודעות חצופות</p></div>', unsafe_allow_html=True)
+    c2.markdown(f'<div class="cute-card"><h3>{insult_count}</h3><p>הודעות חצופות</p></div>', unsafe_allow_html=True)
     c3.markdown('<div class="cute-card"><h3>∞</h3><p>מחשבות עליך</p></div>', unsafe_allow_html=True)
     
     st.divider()
@@ -119,9 +119,9 @@ else:
         st.success("הכספת נפתחה! ❤️")
         trigger_hearts()
         
-        # הטקסט המדויק שלך מחולק לפסקאות בתוך ה-HTML
-        st.markdown("""
-        <div style="background: white; padding: 30px; border-radius: 20px; border: 2px dashed #f08080; text-align: right; line-height: 1.8; direction: rtl; max-width: 600px; margin: 20px auto; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        # המכתב ללא סלאשים בעייתיים ובמבנה HTML נקי
+        st.write(f"""
+        <div style="background: white; padding: 30px; border-radius: 20px; border: 2px dashed #f08080; text-align: right; line-height: 1.8; direction: rtl; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="font-size: 30px;">🎂</span>
                 <h2 style="color: #f08080; margin: 10px 0;">מזל טוב לעידודו שלי!</h2>
@@ -137,7 +137,7 @@ else:
 
             <p>אחרי החיבוק החמים הנעים שקיבלתי אני אתחיל קצת קצת קצת לרדת עליך 😝🚨</p>
 
-            <p>אז עידו אני חושבת שפתחת איתי איזו תחרות שנצים כי מתחילת המלחמה במקום שאני אגיד לכולם חבר שלי ❤️מסכן לוחם סובל בלבנון אני פוחדת עליו🥶  אתה כל יום דופק שנצים🤨 באמת אני אתחיל איתך תחרות מי עושה יותר שנצים במהלך היום😴 מדבר שאני לוקחת השיחות שלנו כמובן מאליו ועושה 20 דברים בו זמנית בהם אבל האדון שמדבר פה מתחיל לפתוח לי יוטיוב בזמן השיחה וגם לעשות דברים אחרים🧐 וואלה מתלונן אבל בעצמך עושה את אותו הדבר🫤 באמת ולא רק זה תמיד מתלונן לי שאני לא נותנת לו לדבר אבל ברגע שאני מחליטה לשתוק ומחזיקה את עצמי הכי חזק שיש צוחקת ונחנקת ממים כדי לא להשמיע קול ועל זה אתה גם מתלונן פתאום לא כיף לך באמת שום דבר שאני עושה לא מתאים לך 🫩 איזו אישה💅 </p>
+            <p>אז עידו אני חושבת שפתחת איתי איזו תחרות שנצים כי מתחילת המלחמה במקום שאני אגיד לכולם חבר שלי ❤️מסכן לוחם סובל בלבנון אני פוחדת עליו🥶 אתה כל יום דופק שנצים🤨 באמת אני אתחיל איתך תחרות מי עושה יותר שנצים במהלך היום😴 מדבר שאני לוקחת השיחות שלנו כמובן מאליו ועושה 20 דברים בו זמנית בהם אבל האדון שמדבר פה מתחיל לפתוח לי יוטיוב בזמן השיחה וגם לעשות דברים אחרים🧐 וואלה מתלונן אבל בעצמך עושה את אותו הדבר🫤 באמת ולא רק זה תמיד מתלונן לי שאני לא נותנת לו לדבר אבל ברגע שאני מחליטה לשתוק ומחזיקה את עצמי הכי חזק שיש צוחקת ונחנקת ממים כדי לא להשמיע קול ועל זה אתה גם מתלונן פתאום לא כיף לך באמת שום דבר שאני עושה לא מתאים לך 🫩 איזו אישה💅 </p>
 
             <hr style="border: 0; border-top: 1px dotted #f08080; margin: 25px 0;">
 
@@ -146,7 +146,7 @@ else:
             <p style="font-size: 1.2em; font-weight: bold; color: #f08080; text-align: center;">אוהבת אותך הכי בעולם ומלא מלא מזל טוב 🎂🎉זקן שלי👴🏻</p>
 
             <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; font-size: 0.9em;">
-                מנסטיה טטרוצ׳יק🎈/חברה של עידו המאגניב/ הזאת שמשתמשת בקלפים מלוכלכים💌/תגיד את המילים הבאות ״אני מלפפון ממש ירוק״ /הולכת לקפוץ עליך ברגע זה
+                מנסטיה טטרוצ׳יק🎈 חברה של עידו המאגניב הזאת שמשתמשת בקלפים מלוכלכים💌 תגיד את המילים הבאות ״אני מלפפון ממש ירוק״ הולכת לקפוץ עליך ברגע זה
             </div>
         </div>
         """, unsafe_allow_html=True)
