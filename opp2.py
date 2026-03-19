@@ -125,7 +125,7 @@ else:
         <div style="background: white; padding: 30px; border-radius: 20px; border: 2px dashed #f08080; text-align: right; line-height: 1.8; direction: rtl; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="font-size: 30px;">🎂</span>
-                <h2 style="color: #f08080; margin: 10px 0;">מזל טוב לעידודו שלי!</h2>
+                <h2 style="color: #f08080; margin: 10px 0;">מזל טוב לגבר החתיך והחסון !</h2>
             </div>
             <p><b>לעידודו הלוחם שלא בלבנון 🪖🔥,</b></p>
             <p>אם אתה חושב שבגלל שזה היום הולדת שלך 🎂 אז אני ארחם עליך בהודעה הזאת?!?! אז אתה לגמרי צודק😘 כאילו לפחות חלקית😝</p>
