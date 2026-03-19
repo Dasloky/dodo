@@ -17,7 +17,7 @@ if 'balloons_fired' not in st.session_state:
     st.session_state.balloons_fired = False
 
 # הגדרת יעד הלחיצות (כדי להשתמש בו גם בכרטיסיות וגם בכספת)
-TARGET_CLICKS = 50
+TARGET_CLICKS = 2
 
 # --- CSS מעוצב עם יישור לימין ---
 st.markdown("""
