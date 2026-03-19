@@ -132,7 +132,7 @@ else:
             <p>כשאני עבדתי על המתנה שלך חפרתי לכל בן אדם אפשרי, וראשאל זרק הערה שאני משקיעה קצת יותר מדי למישהי שיוצאת איתו רק חודשיים... ופשוט הבנתי שבשום שנייה זה לא הרגיש לי יותר מדי כי אני באמת נהנית לעשות לך דברים, גם אם זה אתרים שאני לא כזה טובה בהם 🥲🩵.</p>
             <div style="background: #fff5f5; border-right: 5px solid #f08080; padding: 15px; margin: 20px 0; border-radius: 5px; font-weight: bold;">
     ברגע זה אתה עוצר ומביא לי חיבוק! 🫂 
-    <span style="font-size: 0.85em; font-weight: normal; display: block; margin-top: 5px; color: #666;">
+    <span style="font-size: 0.5em; font-weight: normal; display: block; margin-top: 5px; color: #666;">
         ואם לא עצרת בזמן אז תביא כבר נשיקה... 👅
     </span>
 </div>
