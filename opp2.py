@@ -4,7 +4,7 @@ import time
 import random
 
 # הגדרות דף
-st.set_page_config(page_title="עבור עידודו ❤️", page_icon="❤️", layout="wide")
+st.set_page_config(page_title="אופסי❤️", page_icon="🎂", layout="wide")
 
 # --- ניהול State ---
 if 'clicks' not in st.session_state:
