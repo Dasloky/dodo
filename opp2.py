@@ -16,7 +16,7 @@ if 'last_page' not in st.session_state:
 if 'balloons_fired' not in st.session_state:
     st.session_state.balloons_fired = False
 
-TARGET_CLICKS = 2
+TARGET_CLICKS = 50
 
 # --- CSS מעוצב ---
 st.markdown("""
